@@ -1,3 +1,147 @@
 {
-  "_comment": "Fiscal rates backup data"
+  "_comment": "Taux fiscaux par ville — SwissRelocator (mise à jour 2026-03)",
+  "_sources": {
+    "france": "DGFIP — IS 25% (régime normal), charges URSSAF 2025",
+    "suisse_federal": "OFAS — AVS 8.7%, AI 1.4%, APG 0.5%, AC 2.2% (taux 2025)",
+    "geneve": "AFC Genève — IS effectif ~14%, AF canton GE ~2.45%",
+    "lausanne": "AFC Vaud — IS effectif ~14%, AF canton VD ~2.28%",
+    "zurich": "Steueramt Zürich — IS effectif ~12%, AF canton ZH ~1.2%",
+    "basel": "Steuerverwaltung BS — IS effectif ~13%, AF canton BS ~1.3%"
+  },
+  "_methodology": {
+    "lpp": "LPP estimé à ~5% du salaire brut côté employeur et ~5% côté salarié (moyenne pondérée des tranches d'âge 25-64, sur salaire coordonné, répartition 50/50). Approximation — varie fortement selon plan de prévoyance, âge et salaire.",
+    "laa": "LAA professionnelle ~0.5% (secteur tertiaire/bureaux), à charge employeur. LAA non-professionnelle ~1.3%, à charge salarié.",
+    "af": "Allocations familiales : taux cantonal, à charge employeur uniquement."
+  },
+
+  "cities": {
+    "Lyon": {
+      "country": "FR",
+      "currency": "EUR",
+      "corporate_tax_rate": 0.25,
+      "employer_social_charges_rate": 0.45,
+      "employee_social_charges_rate": 0.22,
+      "notes": "IS 25% (taux normal). Charges patronales ~45% incluant : retraite, maladie, chômage, formation, prévoyance. Charges salariales ~22%."
+    },
+    "Geneve": {
+      "country": "CH",
+      "canton": "GE",
+      "currency": "CHF",
+      "corporate_tax_rate": 0.1398,
+      "employer_social_charges_rate": 0.1435,
+      "employee_social_charges_rate": 0.1270,
+      "social_charges_breakdown": {
+        "_employer": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_pro": 0.0050,
+          "af_canton": 0.0245,
+          "_total": "4.35+0.70+0.25+1.10+5.00+0.50+2.45 = 14.35%"
+        },
+        "_employee": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_np": 0.0130,
+          "_total": "4.35+0.70+0.25+1.10+5.00+1.30 = 12.70%"
+        }
+      },
+      "notes": "IS effectif ~14% (IFD + cantonal GE + communal Genève). Charges incluant AVS/AI/APG/AC + LPP + LAA + AF."
+    },
+    "Lausanne": {
+      "country": "CH",
+      "canton": "VD",
+      "currency": "CHF",
+      "corporate_tax_rate": 0.1395,
+      "employer_social_charges_rate": 0.1418,
+      "employee_social_charges_rate": 0.1270,
+      "social_charges_breakdown": {
+        "_employer": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_pro": 0.0050,
+          "af_canton": 0.0228,
+          "_total": "4.35+0.70+0.25+1.10+5.00+0.50+2.28 = 14.18%"
+        },
+        "_employee": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_np": 0.0130,
+          "_total": "4.35+0.70+0.25+1.10+5.00+1.30 = 12.70%"
+        }
+      },
+      "notes": "IS effectif ~14% (IFD + cantonal VD + communal Lausanne). Charges incluant AVS/AI/APG/AC + LPP + LAA + AF."
+    },
+    "Zurich": {
+      "country": "CH",
+      "canton": "ZH",
+      "currency": "CHF",
+      "corporate_tax_rate": 0.1196,
+      "employer_social_charges_rate": 0.1310,
+      "employee_social_charges_rate": 0.1270,
+      "social_charges_breakdown": {
+        "_employer": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_pro": 0.0050,
+          "af_canton": 0.0120,
+          "_total": "4.35+0.70+0.25+1.10+5.00+0.50+1.20 = 13.10%"
+        },
+        "_employee": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_np": 0.0130,
+          "_total": "4.35+0.70+0.25+1.10+5.00+1.30 = 12.70%"
+        }
+      },
+      "notes": "IS effectif ~12% (IFD + cantonal ZH + communal Zürich). Canton le plus attractif fiscalement."
+    },
+    "Basel": {
+      "country": "CH",
+      "canton": "BS",
+      "currency": "CHF",
+      "corporate_tax_rate": 0.1300,
+      "employer_social_charges_rate": 0.1320,
+      "employee_social_charges_rate": 0.1270,
+      "social_charges_breakdown": {
+        "_employer": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_pro": 0.0050,
+          "af_canton": 0.0130,
+          "_total": "4.35+0.70+0.25+1.10+5.00+0.50+1.30 = 13.20%"
+        },
+        "_employee": {
+          "avs": 0.0435,
+          "ai": 0.0070,
+          "apg": 0.0025,
+          "ac": 0.0110,
+          "lpp_approx": 0.0500,
+          "laa_np": 0.0130,
+          "_total": "4.35+0.70+0.25+1.10+5.00+1.30 = 12.70%"
+        }
+      },
+      "notes": "IS effectif ~13% (IFD + cantonal BS + communal Basel-Stadt)."
+    }
+  }
 }

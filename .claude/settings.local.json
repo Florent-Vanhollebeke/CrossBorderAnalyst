@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python index_faiss.py:*)"
+      "Bash(python index_faiss.py:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(pytest backend/tests/test_fiscal_router.py -v)"
     ],
     "deny": [],
     "ask": []

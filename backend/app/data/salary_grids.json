@@ -1,3 +1,57 @@
 {
-  "_comment": "Salary grids by role/city"
+  "_comment": "Grilles salariales et taux de change — SwissRelocator (mise à jour 2025)",
+  "_sources": {
+    "eur_chf": "Taux de change moyen EUR/CHF 2025 (~0.93)",
+    "salaires_ch": "OFS (Office fédéral de la statistique) — Enquête sur la structure des salaires 2024",
+    "salaires_fr": "INSEE — Enquête DADS 2024"
+  },
+
+  "exchange_rates": {
+    "EUR_to_CHF": 0.94,
+    "CHF_to_EUR": 1.064,
+    "last_updated": "2026-03",
+    "_note": "1 EUR ≈ 0.94 CHF (le franc suisse est plus fort que l'euro). Vérifier régulièrement sur xe.com."
+  },
+
+  "salary_benchmarks": {
+    "_comment": "Salaires médians annuels bruts par rôle et ville (EUR pour FR, CHF pour CH)",
+    "software_engineer": {
+      "Lyon": 45000,
+      "Geneve": 120000,
+      "Lausanne": 115000,
+      "Zurich": 125000,
+      "Basel": 110000
+    },
+    "senior_engineer": {
+      "Lyon": 60000,
+      "Geneve": 155000,
+      "Lausanne": 150000,
+      "Zurich": 165000,
+      "Basel": 145000
+    },
+    "manager": {
+      "Lyon": 70000,
+      "Geneve": 180000,
+      "Lausanne": 170000,
+      "Zurich": 190000,
+      "Basel": 165000
+    },
+    "director": {
+      "Lyon": 90000,
+      "Geneve": 220000,
+      "Lausanne": 210000,
+      "Zurich": 240000,
+      "Basel": 200000
+    }
+  },
+
+  "minimum_wage": {
+    "_comment": "Salaires minimaux légaux annuels bruts (EUR/CHF)",
+    "Lyon": 21203,
+    "Geneve": 48360,
+    "Lausanne": 40800,
+    "Zurich": null,
+    "Basel": 40560,
+    "_notes": "Zurich n'a pas de salaire minimum légal cantonal (salaire minimum fédéral inexistant en CH). Genève a le salaire minimum le plus élevé du monde."
+  }
 }

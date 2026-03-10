@@ -14,6 +14,7 @@ import logging
 # from app.routers import predict_rent, fiscal, rag_advisor
 # Pour l'instant, on simule l'import direct
 from predict_rent_router import router as predict_rent_router
+from routers.fiscal_router import router as fiscal_router
 
 # ============================================
 # CONFIGURATION LOGGING
@@ -78,10 +79,10 @@ Florent VANHOLLEBEKE - Chef de projet IA/Automatisation
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",           # Dev local
-        "https://swissrelocator.vercel.app",  # Production
-        "https://*.vercel.app",            # Preview deployments
+        "http://localhost:3000",
+        "https://swissrelocator.vercel.app",
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -134,8 +135,10 @@ async def global_exception_handler(request: Request, exc: Exception):
 # ML Predictions (loyers)
 app.include_router(predict_rent_router)
 
+# Comparaison fiscale FR/CH
+app.include_router(fiscal_router)
+
 # TODO: Ajouter les autres routers
-# app.include_router(fiscal_router, prefix="/api/v1", tags=["Fiscal"])
 # app.include_router(rag_router, prefix="/api/v1", tags=["RAG Advisor"])
 
 
