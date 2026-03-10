@@ -1,1 +1,3 @@
-// 4 steps illustration
+export function HowItWorks() {
+  return null;
+}

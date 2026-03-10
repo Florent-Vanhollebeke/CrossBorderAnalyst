@@ -383,10 +383,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
 - [x] Modèle ML prédiction loyers (XGBoost)
 - [x] API REST FastAPI
-- [x] Système RAG avec FAISS
-- [x] Frontend Next.js 14
-- [ ] Module simulation fiscale détaillée
-- [ ] Système d'authentification complet
+- [x] Système RAG avec FAISS (architecture OK, documents à alimenter)
+- [x] Frontend Next.js 14 (landing, simulateur fiscal + loyer, dashboard résultats, i18n FR/EN)
+- [x] Module simulation fiscale détaillée (audité et corrigé : IS sur bénéfice, charges CH réalistes)
+- [x] Système d'authentification Supabase (login, register, PKCE, SSR cookies)
 - [ ] Dashboard utilisateur avec historique
 - [ ] Export PDF des comparaisons
 - [ ] Intégration paiement (Stripe)
@@ -406,7 +406,7 @@ Chef de projet IA/Automatisation
 
 ## Licence
 
-Copyright © 2025 Florent VANHOLLEBEKE. Tous droits réservés.
+Copyright © 2026 Florent VANHOLLEBEKE. Tous droits réservés.
 
 Ce projet est actuellement en développement privé. Aucune licence open-source n'est accordée pour l'instant.
 

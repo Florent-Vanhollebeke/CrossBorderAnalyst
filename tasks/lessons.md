@@ -17,3 +17,15 @@
 6. **Sécurité — messages d'erreur** : Ne jamais exposer `str(e)` dans une réponse HTTP. Logger l'exception côté serveur, retourner un message générique au client.
 
 7. **CORS wildcards partielles** : FastAPI/Starlette ne supporte pas `https://*.domain.com` dans `allow_origins`. Utiliser `allow_origin_regex`.
+
+## 2026-03-10 — Audit module RAG (Gemini)
+
+8. **Mocks hardcodes en production** : Ne jamais mettre de reponses mockees dans le code de production (ex: `if "Geneve" in question: answer = "..."`). Les mocks vont dans les tests uniquement.
+
+9. **Cle API default "dummy"** : Ne jamais mettre de valeur par defaut bidon pour une cle API (`os.environ.get("KEY", "dummy")`). Verifier explicitement que la cle existe, sinon retourner un message clair.
+
+10. **Tests 100% mockes = faux sentiment de securite** : Si tous les composants critiques sont mockes (FAISS, embeddings, LLM), les tests valident la plomberie mais pas le fonctionnement reel. Ajouter au minimum un test qui verifie le chargement reel de l'index.
+
+11. **Imports relatifs vs absolus** : Dans ce projet, `app/` est la racine Python (uvicorn lance depuis `backend/app/`). Les imports doivent etre `from routers.x import ...` et non `from app.routers.x import ...`. Les tests ajoutent `sys.path.insert(0, "app")`.
+
+12. **print() vs logging** : Toujours utiliser `logging.getLogger(__name__)` au lieu de `print()` pour les erreurs. Le logging structure est filtrable, configurable et ne pollue pas stdout.

@@ -1,3 +1,88 @@
 {
-  "_comment": "English translations"
+  "nav": {
+    "home": "Home",
+    "simulator": "Simulator",
+    "about": "About"
+  },
+  "hero": {
+    "title": "Optimize your relocation to Switzerland",
+    "subtitle": "Compare taxation, estimate commercial rents and simulate your costs with our intelligent platform.",
+    "cta": "Start simulation",
+    "secondary_cta": "View cities"
+  },
+  "value_props": {
+    "title": "Why SwissRelocator?",
+    "fiscal": {
+      "title": "Tax comparison",
+      "description": "Corporate tax, social charges, employer cost: compare France and Switzerland in one click."
+    },
+    "rent": {
+      "title": "Rent prediction",
+      "description": "ML model trained on 2000+ ImmoScout24 listings to estimate your commercial rents."
+    },
+    "privacy": {
+      "title": "Privacy by Design",
+      "description": "Your sensitive data stays local. Only anonymized data is transmitted."
+    }
+  },
+  "cities": {
+    "title": "Supported cities",
+    "geneve": "Geneva",
+    "lausanne": "Lausanne",
+    "zurich": "Zurich",
+    "basel": "Basel"
+  },
+  "simulator": {
+    "title": "Simulator",
+    "tab_fiscal": "Tax comparison",
+    "tab_rent": "Rent prediction",
+    "fiscal": {
+      "revenue": "Annual revenue (EUR)",
+      "salary_director": "Director annual gross salary (EUR)",
+      "num_employees": "Number of employees",
+      "avg_salary": "Average employee salary (EUR)",
+      "city": "City",
+      "submit": "Compare",
+      "loading": "Calculating..."
+    },
+    "rent": {
+      "city": "City",
+      "surface": "Surface (sqm)",
+      "pieces": "Number of rooms",
+      "etage": "Floor",
+      "property_type": "Property type",
+      "bureau": "Office",
+      "commercial": "Commercial",
+      "parking": "Parking included",
+      "lift": "Elevator",
+      "submit": "Estimate rent",
+      "loading": "Estimating..."
+    }
+  },
+  "results": {
+    "title": "Results",
+    "fiscal": {
+      "title": "Tax comparison",
+      "corporate_tax": "Corporate income tax",
+      "employer_charges": "Employer social charges",
+      "employee_charges": "Employee social charges",
+      "total_employer_cost": "Total employer cost",
+      "net_result": "Net result",
+      "profit_before_tax": "Profit before tax",
+      "rate": "Rate",
+      "amount": "Amount"
+    },
+    "rent": {
+      "title": "Rent estimate",
+      "predicted_rent": "Estimated rent",
+      "price_per_m2": "Price per sqm",
+      "confidence": "Confidence range",
+      "model_info": "Model info"
+    },
+    "back": "New simulation"
+  },
+  "footer": {
+    "description": "France-Switzerland tax and real estate comparison platform.",
+    "legal": "All rights reserved."
+  }
 }

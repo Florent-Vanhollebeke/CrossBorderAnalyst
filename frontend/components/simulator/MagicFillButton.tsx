@@ -1,1 +1,3 @@
-// AI pre-fill button
+export function MagicFillButton() {
+  return null;
+}

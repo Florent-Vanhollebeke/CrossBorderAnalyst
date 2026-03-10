@@ -11,10 +11,9 @@ import time
 import logging
 
 # Import des routers
-# from app.routers import predict_rent, fiscal, rag_advisor
-# Pour l'instant, on simule l'import direct
 from predict_rent_router import router as predict_rent_router
 from routers.fiscal_router import router as fiscal_router
+from routers.rag_advisor import router as rag_router
 
 # ============================================
 # CONFIGURATION LOGGING
@@ -138,8 +137,8 @@ app.include_router(predict_rent_router)
 # Comparaison fiscale FR/CH
 app.include_router(fiscal_router)
 
-# TODO: Ajouter les autres routers
-# app.include_router(rag_router, prefix="/api/v1", tags=["RAG Advisor"])
+# RAG Advisor
+app.include_router(rag_router, prefix="/api/v1", tags=["RAG Advisor"])
 
 
 # ============================================

@@ -1,1 +1,3 @@
-// PDF export button
+export function DownloadPDFButton() {
+  return null;
+}

@@ -1,1 +1,3 @@
-// Supabase auth helpers
+export function getSupabaseClient() {
+  return null;
+}

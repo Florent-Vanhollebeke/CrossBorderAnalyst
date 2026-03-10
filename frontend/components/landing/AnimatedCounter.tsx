@@ -1,1 +1,3 @@
-// Reusable animated counter component
+export function AnimatedCounter() {
+  return null;
+}

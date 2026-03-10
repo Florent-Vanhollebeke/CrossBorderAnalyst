@@ -60,6 +60,40 @@ export interface HealthResponse {
   features_loaded: boolean;
 }
 
+export type FiscalCity = 'Lyon' | 'Geneve' | 'Lausanne' | 'Zurich' | 'Basel';
+
+export interface CompareFiscalRequest {
+  revenue_annual: number;
+  salary_director: number;
+  num_employees: number;
+  city: FiscalCity;
+  average_employee_salary?: number;
+}
+
+export interface CompareFiscalResponse {
+  city: string;
+  country: string;
+  currency: string;
+  corporate_tax_rate: number;
+  corporate_tax_amount: number;
+  employer_social_charges_rate: number;
+  employer_social_charges_amount: number;
+  employee_social_charges_rate: number;
+  employee_social_charges_amount: number;
+  total_employer_cost: number;
+  net_result: number;
+  input: {
+    revenue_annual: number;
+    salary_director: number;
+    num_employees: number;
+    average_employee_salary: number;
+    total_gross_salaries: number;
+    original_currency: string;
+    local_currency: string;
+    eur_to_chf_rate: number | null;
+  };
+}
+
 export interface ApiError {
   detail: string;
   status: number;
@@ -132,26 +166,15 @@ class ApiClient {
   }
 
   // ============================================
-  // SIMULATION (TODO: implement)
+  // FISCAL COMPARISON
   // ============================================
 
-  // async runSimulation(data: SimulationRequest): Promise<SimulationResponse> {
-  //   return this.request<SimulationResponse>('/api/v1/simulate', {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //   });
-  // }
-
-  // ============================================
-  // RAG ADVISOR (TODO: implement)
-  // ============================================
-
-  // async askAdvisor(question: string): Promise<AdvisorResponse> {
-  //   return this.request<AdvisorResponse>('/api/v1/advisor/ask', {
-  //     method: 'POST',
-  //     body: JSON.stringify({ question }),
-  //   });
-  // }
+  async compareFiscal(data: CompareFiscalRequest): Promise<CompareFiscalResponse> {
+    return this.request<CompareFiscalResponse>('/api/v1/compare-fiscal', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
 }
 
 // ============================================

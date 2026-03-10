@@ -1,1 +1,3 @@
-// Progress indicator
+export function StepIndicator() {
+  return null;
+}

@@ -1,1 +1,3 @@
-// Technology logos
+export function TechStack() {
+  return null;
+}

@@ -1,3 +1,88 @@
 {
-  "_comment": "French translations"
+  "nav": {
+    "home": "Accueil",
+    "simulator": "Simulateur",
+    "about": "A propos"
+  },
+  "hero": {
+    "title": "Optimisez votre implantation en Suisse",
+    "subtitle": "Comparez la fiscalite, estimez vos loyers commerciaux et simulez vos couts avec notre plateforme intelligente.",
+    "cta": "Lancer la simulation",
+    "secondary_cta": "Voir les villes"
+  },
+  "value_props": {
+    "title": "Pourquoi SwissRelocator ?",
+    "fiscal": {
+      "title": "Comparaison fiscale",
+      "description": "IS, charges sociales, cout employeur : comparez France et Suisse en un clic."
+    },
+    "rent": {
+      "title": "Prediction de loyers",
+      "description": "Modele ML entraine sur 2000+ annonces ImmoScout24 pour estimer vos loyers commerciaux."
+    },
+    "privacy": {
+      "title": "Privacy by Design",
+      "description": "Vos donnees sensibles restent locales. Seules les donnees anonymisees sont transmises."
+    }
+  },
+  "cities": {
+    "title": "Villes supportees",
+    "geneve": "Geneve",
+    "lausanne": "Lausanne",
+    "zurich": "Zurich",
+    "basel": "Basel"
+  },
+  "simulator": {
+    "title": "Simulateur",
+    "tab_fiscal": "Comparaison fiscale",
+    "tab_rent": "Prediction loyer",
+    "fiscal": {
+      "revenue": "Chiffre d'affaires annuel (EUR)",
+      "salary_director": "Salaire dirigeant annuel brut (EUR)",
+      "num_employees": "Nombre d'employes",
+      "avg_salary": "Salaire moyen employes (EUR)",
+      "city": "Ville",
+      "submit": "Comparer",
+      "loading": "Calcul en cours..."
+    },
+    "rent": {
+      "city": "Ville",
+      "surface": "Surface (m2)",
+      "pieces": "Nombre de pieces",
+      "etage": "Etage",
+      "property_type": "Type de bien",
+      "bureau": "Bureau",
+      "commercial": "Commercial",
+      "parking": "Parking inclus",
+      "lift": "Ascenseur",
+      "submit": "Estimer le loyer",
+      "loading": "Estimation en cours..."
+    }
+  },
+  "results": {
+    "title": "Resultats",
+    "fiscal": {
+      "title": "Comparaison fiscale",
+      "corporate_tax": "Impot sur les societes",
+      "employer_charges": "Charges patronales",
+      "employee_charges": "Charges salariales",
+      "total_employer_cost": "Cout total employeur",
+      "net_result": "Resultat net",
+      "profit_before_tax": "Benefice avant IS",
+      "rate": "Taux",
+      "amount": "Montant"
+    },
+    "rent": {
+      "title": "Estimation du loyer",
+      "predicted_rent": "Loyer estime",
+      "price_per_m2": "Prix au m2",
+      "confidence": "Fourchette de confiance",
+      "model_info": "Informations modele"
+    },
+    "back": "Nouvelle simulation"
+  },
+  "footer": {
+    "description": "Plateforme de comparaison fiscale et immobiliere France-Suisse.",
+    "legal": "Tous droits reserves."
+  }
 }
