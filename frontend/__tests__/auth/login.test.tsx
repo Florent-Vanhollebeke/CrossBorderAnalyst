@@ -1,82 +1,67 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import LoginPage from '@/app/[locale]/auth/login/page'
-import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
-
-// Mock the Supabase client
-vi.mock('@supabase/ssr', () => ({
-  createBrowserClient: vi.fn(),
-}))
+import LoginPage from '@/app/[locale]/auth/login/page'
+import { createClient } from '@/lib/supabase/client'
 
 describe('LoginPage', () => {
-  const mockSignInWithPassword = vi.fn()
   const mockPush = vi.fn()
+  const mockSignInWithPassword = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
-    // Setup generic mock return for createBrowserClient
-    ;(createBrowserClient as any).mockReturnValue({
-      auth: {
-        signInWithPassword: mockSignInWithPassword,
-      },
-    })
-
-    // Setup router mock
-    ;(useRouter as any).mockReturnValue({
-      push: mockPush,
-      refresh: vi.fn(),
+    ;(useRouter as ReturnType<typeof vi.fn>).mockReturnValue({ push: mockPush, refresh: vi.fn() })
+    ;(createClient as ReturnType<typeof vi.fn>).mockReturnValue({
+      auth: { signInWithPassword: mockSignInWithPassword },
     })
   })
 
-  it('renders login form correctly', () => {
-    render(<LoginPage params={{ locale: 'fr' }}/>)
-    
+  it('renders login form with email, password and submit button', () => {
+    render(<LoginPage params={{ locale: 'fr' }} />)
     expect(screen.getByRole('heading', { name: /Login/i })).toBeInTheDocument()
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Password/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Sign In/i })).toBeInTheDocument()
   })
 
-  it('submits credentials to supabase and redirects on success', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({ data: { user: { id: 1 } }, error: null })
-    
-    render(<LoginPage params={{ locale: 'fr' }}/>)
-    
-    // Fill out form
-    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'test@example.com' } })
-    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'password123' } })
-    
-    // Submit
+  it('redirects to /fr/simulator on successful login', async () => {
+    mockSignInWithPassword.mockResolvedValueOnce({ error: null })
+    render(<LoginPage params={{ locale: 'fr' }} />)
+
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'user@test.com' } })
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'pass123' } })
     fireEvent.click(screen.getByRole('button', { name: /Sign In/i }))
-    
-    await waitFor(() => {
-      expect(mockSignInWithPassword).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
-      })
-    })
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/fr/dashboard') // Ensure redirect happens on success
+      expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'user@test.com', password: 'pass123' })
+      expect(mockPush).toHaveBeenCalledWith('/fr/simulator')
     })
   })
 
-  it('displays error message on failed login', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({ data: null, error: { message: 'Invalid login credentials' } })
-    
-    render(<LoginPage params={{ locale: 'fr' }}/>)
-    
-    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'wrong@example.com' } })
-    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'wrongpass' } })
+  it('shows error on failed login and does not redirect', async () => {
+    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Invalid login credentials' } })
+    render(<LoginPage params={{ locale: 'fr' }} />)
+
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'bad@test.com' } })
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'wrong' } })
     fireEvent.click(screen.getByRole('button', { name: /Sign In/i }))
-    
+
     await waitFor(() => {
       expect(screen.getByText('Invalid login credentials')).toBeInTheDocument()
     })
-    
-    // Should NOT redirect
     expect(mockPush).not.toHaveBeenCalled()
+  })
+
+  it('disables submit button while loading', async () => {
+    mockSignInWithPassword.mockReturnValueOnce(new Promise(() => {}))
+    render(<LoginPage params={{ locale: 'fr' }} />)
+
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'a@b.com' } })
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'pass' } })
+    fireEvent.click(screen.getByRole('button', { name: /Sign In/i }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Signing in/i })).toBeDisabled()
+    })
   })
 })
