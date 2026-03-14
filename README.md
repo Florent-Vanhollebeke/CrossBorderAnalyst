@@ -394,6 +394,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
 ---
 
+## Methodology — Source Verification Matrix
+
+Les taux fiscaux implémentés dans SwissRelocator sont tracés jusqu'à leur source officielle et couverts par des tests automatisés.
+
+Chaque valeur suit une trace d'audit en 3 colonnes :
+**Source officielle** (organisme + référence exacte) → **Implémentation** (fichier + valeur) → **Test de validation** (cas automatisé)
+
+→ [docs/fiscal_audit_trail.md](docs/fiscal_audit_trail.md)
+
+---
+
 ## Auteur
 
 **Florent VANHOLLEBEKE**
