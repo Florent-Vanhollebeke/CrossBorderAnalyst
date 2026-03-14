@@ -15,6 +15,7 @@ from predict_rent_router import router as predict_rent_router
 from routers.fiscal_router import router as fiscal_router
 from routers.rag_advisor import router as rag_router
 from routers.pdf_router import router as pdf_router
+from routers.agents_router import router as agents_router
 
 # Import des modules core
 from core.exceptions import SwissRelocatorError, register_exception_handlers
@@ -166,6 +167,9 @@ app.include_router(rag_router, prefix="/api/v1", tags=["RAG Advisor"])
 
 # PDF Reports
 app.include_router(pdf_router)
+
+# AI Agents (MarketScout, LegalWatchdog)
+app.include_router(agents_router)
 
 
 # ============================================
