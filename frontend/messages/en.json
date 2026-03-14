@@ -70,14 +70,20 @@
       "net_result": "Net result",
       "profit_before_tax": "Profit before tax",
       "rate": "Rate",
-      "amount": "Amount"
+      "amount": "Amount",
+      "savings": "Estimated savings vs Lyon",
+      "extra_cost": "Estimated extra cost vs Lyon"
     },
     "rent": {
       "title": "Rent estimate",
       "predicted_rent": "Estimated rent",
       "price_per_m2": "Price per sqm",
       "confidence": "Confidence range",
-      "model_info": "Model info"
+      "model_info": "Model info",
+      "model_type": "Model",
+      "r2_score": "R2 score",
+      "training_data": "Data source",
+      "last_updated": "Last updated"
     },
     "back": "New simulation"
   },

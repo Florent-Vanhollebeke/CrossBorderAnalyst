@@ -6,12 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { rentSchema, type RentFormData } from '@/lib/schemas';
-import { api, type PredictRentResponse, type ApiError } from '@/lib/api';
+import { api, type PredictRentResponse, type ApiError, type SupportedCity } from '@/lib/api';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-
-const RENT_CITIES = ['Geneve', 'Lausanne', 'Zurich', 'Basel'] as const;
+import { SwissCantonMap } from './SwissCantonMap';
 
 interface RentFormProps {
   onResult: (result: PredictRentResponse) => void;
@@ -25,17 +24,29 @@ export function RentForm({ onResult }: RentFormProps) {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<RentFormData>({
     resolver: zodResolver(rentSchema),
     defaultValues: {
       city: 'Geneve',
+      latitude: 46.2044,
+      longitude: 6.1432,
       surface: 150,
       property_type: 'bureau',
       has_parking: false,
       has_lift: true,
     },
   });
+
+  const selectedCity = watch('city');
+
+  const handleCantonSelect = ({ city, lat, lng }: { city: SupportedCity; lat: number; lng: number }) => {
+    setValue('city', city, { shouldValidate: true });
+    setValue('latitude', lat);
+    setValue('longitude', lng);
+  };
 
   const onSubmit = async (data: RentFormData) => {
     setLoading(true);
@@ -55,19 +66,19 @@ export function RentForm({ onResult }: RentFormProps) {
     <Card>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+          {/* Canton map selector */}
           <div className="space-y-1">
-            <label htmlFor="rent-city" className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700">
               {t('city')}
             </label>
-            <select
-              id="rent-city"
-              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-              {...register('city')}
-            >
-              {RENT_CITIES.map((city) => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
+            <SwissCantonMap
+              selected={selectedCity}
+              onSelect={handleCantonSelect}
+            />
+            {errors.city && (
+              <p className="text-xs text-red-600">{errors.city.message}</p>
+            )}
           </div>
 
           <Input

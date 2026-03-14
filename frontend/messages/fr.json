@@ -2,11 +2,11 @@
   "nav": {
     "home": "Accueil",
     "simulator": "Simulateur",
-    "about": "A propos"
+    "about": "À propos"
   },
   "hero": {
     "title": "Optimisez votre implantation en Suisse",
-    "subtitle": "Comparez la fiscalite, estimez vos loyers commerciaux et simulez vos couts avec notre plateforme intelligente.",
+    "subtitle": "Comparez la fiscalité, estimez vos loyers commerciaux et simulez vos coûts avec notre plateforme intelligente.",
     "cta": "Lancer la simulation",
     "secondary_cta": "Voir les villes"
   },
@@ -14,75 +14,81 @@
     "title": "Pourquoi SwissRelocator ?",
     "fiscal": {
       "title": "Comparaison fiscale",
-      "description": "IS, charges sociales, cout employeur : comparez France et Suisse en un clic."
+      "description": "IS, charges sociales, coût employeur : comparez France et Suisse en un clic."
     },
     "rent": {
-      "title": "Prediction de loyers",
-      "description": "Modele ML entraine sur 2000+ annonces ImmoScout24 pour estimer vos loyers commerciaux."
+      "title": "Prédiction de loyers",
+      "description": "Modèle ML entraîné sur 2000+ annonces ImmoScout24 pour estimer vos loyers commerciaux."
     },
     "privacy": {
       "title": "Privacy by Design",
-      "description": "Vos donnees sensibles restent locales. Seules les donnees anonymisees sont transmises."
+      "description": "Vos données sensibles restent locales. Seules les données anonymisées sont transmises."
     }
   },
   "cities": {
-    "title": "Villes supportees",
-    "geneve": "Geneve",
+    "title": "Villes supportées",
+    "geneve": "Genève",
     "lausanne": "Lausanne",
     "zurich": "Zurich",
-    "basel": "Basel"
+    "basel": "Bâle"
   },
   "simulator": {
     "title": "Simulateur",
     "tab_fiscal": "Comparaison fiscale",
-    "tab_rent": "Prediction loyer",
+    "tab_rent": "Prédiction loyer",
     "fiscal": {
       "revenue": "Chiffre d'affaires annuel (EUR)",
       "salary_director": "Salaire dirigeant annuel brut (EUR)",
-      "num_employees": "Nombre d'employes",
-      "avg_salary": "Salaire moyen employes (EUR)",
+      "num_employees": "Nombre d'employés",
+      "avg_salary": "Salaire moyen employés (EUR)",
       "city": "Ville",
       "submit": "Comparer",
-      "loading": "Calcul en cours..."
+      "loading": "Calcul en cours…"
     },
     "rent": {
       "city": "Ville",
-      "surface": "Surface (m2)",
-      "pieces": "Nombre de pieces",
-      "etage": "Etage",
+      "surface": "Surface (m²)",
+      "pieces": "Nombre de pièces",
+      "etage": "Étage",
       "property_type": "Type de bien",
       "bureau": "Bureau",
       "commercial": "Commercial",
       "parking": "Parking inclus",
       "lift": "Ascenseur",
       "submit": "Estimer le loyer",
-      "loading": "Estimation en cours..."
+      "loading": "Estimation en cours…"
     }
   },
   "results": {
-    "title": "Resultats",
+    "title": "Résultats",
     "fiscal": {
       "title": "Comparaison fiscale",
-      "corporate_tax": "Impot sur les societes",
+      "corporate_tax": "Impôt sur les sociétés",
       "employer_charges": "Charges patronales",
       "employee_charges": "Charges salariales",
-      "total_employer_cost": "Cout total employeur",
-      "net_result": "Resultat net",
-      "profit_before_tax": "Benefice avant IS",
+      "total_employer_cost": "Coût total employeur",
+      "net_result": "Résultat net",
+      "profit_before_tax": "Bénéfice avant IS",
       "rate": "Taux",
-      "amount": "Montant"
+      "amount": "Montant",
+      "savings": "Économie estimée vs Lyon",
+      "extra_cost": "Surcoût estimé vs Lyon"
     },
     "rent": {
       "title": "Estimation du loyer",
-      "predicted_rent": "Loyer estime",
-      "price_per_m2": "Prix au m2",
+      "predicted_rent": "Loyer estimé",
+      "price_per_m2": "Prix au m²",
       "confidence": "Fourchette de confiance",
-      "model_info": "Informations modele"
+      "model_info": "Informations modèle",
+      "model_type": "Modèle",
+      "r2_score": "Score R²",
+      "training_data": "Données",
+      "last_updated": "Mise à jour"
     },
     "back": "Nouvelle simulation"
   },
   "footer": {
-    "description": "Plateforme de comparaison fiscale et immobiliere France-Suisse.",
-    "legal": "Tous droits reserves."
+    "description": "Plateforme de comparaison fiscale et immobilière France-Suisse.",
+    "legal": "Tous droits réservés."
   }
 }

@@ -2,11 +2,20 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 
+/** Chemins internes autorisés pour la redirection post-auth. */
+function sanitizeNext(next: string | null): string {
+  if (!next) return '/'
+  // Rejette tout ce qui contient un schéma (http://, //) ou un domaine externe
+  if (/^https?:\/\//i.test(next) || next.startsWith('//')) return '/'
+  // Ne conserve que les chemins relatifs commençant par /
+  if (!next.startsWith('/')) return '/'
+  return next
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? '/'
+  const next = sanitizeNext(searchParams.get('next'))
   const locale = searchParams.get('locale') ?? 'fr'
 
   if (code) {
@@ -25,32 +34,29 @@ export async function GET(request: Request) {
                 cookieStore.set(name, value, options)
               )
             } catch {
-              // The `setAll` method was called from a Server Component.
-              // This can be ignored if you have middleware refreshing
-              // user sessions.
+              // Ignoré en Server Component — la session est rafraîchie par le middleware
             }
           },
         },
       }
     )
-    
+
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    
+
     if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') 
+      const forwardedHost = request.headers.get('x-forwarded-host')
       const isLocalEnv = process.env.NODE_ENV === 'development'
-      
+      const suffix = next === '/' ? '' : next
+
       if (isLocalEnv) {
-        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-        return NextResponse.redirect(`${origin}/${locale}${next === '/' ? '' : next}`)
+        return NextResponse.redirect(`${origin}/${locale}${suffix}`)
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}/${locale}${next === '/' ? '' : next}`)
+        return NextResponse.redirect(`https://${forwardedHost}/${locale}${suffix}`)
       } else {
-        return NextResponse.redirect(`${origin}/${locale}${next === '/' ? '' : next}`)
+        return NextResponse.redirect(`${origin}/${locale}${suffix}`)
       }
     }
   }
 
-  // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/${locale}/auth/auth-code-error`)
 }

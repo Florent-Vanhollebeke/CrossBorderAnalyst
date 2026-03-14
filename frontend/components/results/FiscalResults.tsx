@@ -5,6 +5,7 @@ import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FiscalChart } from './FiscalChart';
+import { DownloadPDFButton } from './DownloadPDFButton';
 import type { CompareFiscalResponse } from '@/lib/api';
 import { formatCHF, formatEUR } from '@/lib/api';
 
@@ -36,10 +37,13 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
     <div className="mx-auto max-w-4xl space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900">{t('fiscal.title')}</h1>
-        <Button variant="secondary" onClick={onBack} className="gap-2">
-          <ArrowLeft className="h-4 w-4" />
-          {t('back')}
-        </Button>
+        <div className="flex items-center gap-3">
+          <DownloadPDFButton results={results} />
+          <Button variant="secondary" onClick={onBack} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            {t('back')}
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -64,7 +68,7 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
           <Card className={savings > 0 ? 'border-emerald-200 bg-emerald-50' : 'border-red-200 bg-red-50'}>
             <CardContent className="pt-6 text-center">
               <p className="text-sm text-gray-500">
-                {savings > 0 ? 'Economie estimee' : 'Surcout estime'}
+                {savings > 0 ? t('fiscal.savings') : t('fiscal.extra_cost')}
               </p>
               <div className="mt-1 flex items-center justify-center gap-2">
                 {savings > 0 ? (

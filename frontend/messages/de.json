@@ -1,3 +1,94 @@
 {
-  "_comment": "German translations"
+  "nav": {
+    "home": "Startseite",
+    "simulator": "Simulator",
+    "about": "Über uns"
+  },
+  "hero": {
+    "title": "Optimieren Sie Ihre Ansiedlung in der Schweiz",
+    "subtitle": "Vergleichen Sie die Steuerbelastung, schätzen Sie Ihre Gewerbemieten und simulieren Sie Ihre Kosten mit unserer intelligenten Plattform.",
+    "cta": "Simulation starten",
+    "secondary_cta": "Städte anzeigen"
+  },
+  "value_props": {
+    "title": "Warum SwissRelocator?",
+    "fiscal": {
+      "title": "Steuervergleich",
+      "description": "Körperschaftssteuer, Sozialabgaben, Arbeitgeberkosten: Frankreich und Schweiz auf einen Blick vergleichen."
+    },
+    "rent": {
+      "title": "Mietpreis­vorhersage",
+      "description": "ML-Modell trainiert auf 2000+ ImmoScout24-Inseraten zur Schätzung Ihrer Gewerbemieten."
+    },
+    "privacy": {
+      "title": "Privacy by Design",
+      "description": "Ihre sensiblen Daten bleiben lokal. Nur anonymisierte Daten werden übermittelt."
+    }
+  },
+  "cities": {
+    "title": "Unterstützte Städte",
+    "geneve": "Genf",
+    "lausanne": "Lausanne",
+    "zurich": "Zürich",
+    "basel": "Basel"
+  },
+  "simulator": {
+    "title": "Simulator",
+    "tab_fiscal": "Steuervergleich",
+    "tab_rent": "Mietvorhersage",
+    "fiscal": {
+      "revenue": "Jahresumsatz (EUR)",
+      "salary_director": "Bruttogehalt Geschäftsführer jährlich (EUR)",
+      "num_employees": "Anzahl Mitarbeitende",
+      "avg_salary": "Durchschnittsgehalt Mitarbeitende (EUR)",
+      "city": "Stadt",
+      "submit": "Vergleichen",
+      "loading": "Berechnung läuft…"
+    },
+    "rent": {
+      "city": "Stadt",
+      "surface": "Fläche (m²)",
+      "pieces": "Anzahl Zimmer",
+      "etage": "Stockwerk",
+      "property_type": "Objekttyp",
+      "bureau": "Büro",
+      "commercial": "Gewerbe",
+      "parking": "Parkplatz inklusive",
+      "lift": "Aufzug",
+      "submit": "Miete schätzen",
+      "loading": "Schätzung läuft…"
+    }
+  },
+  "results": {
+    "title": "Ergebnisse",
+    "fiscal": {
+      "title": "Steuervergleich",
+      "corporate_tax": "Körperschaftssteuer",
+      "employer_charges": "Arbeitgeberbeiträge",
+      "employee_charges": "Arbeitnehmerbeiträge",
+      "total_employer_cost": "Gesamtkosten Arbeitgeber",
+      "net_result": "Nettoergebnis",
+      "profit_before_tax": "Gewinn vor Steuern",
+      "rate": "Satz",
+      "amount": "Betrag",
+      "savings": "Geschätzte Ersparnis vs. Lyon",
+      "extra_cost": "Geschätzte Mehrkosten vs. Lyon"
+    },
+    "rent": {
+      "title": "Mietschätzung",
+      "predicted_rent": "Geschätzte Miete",
+      "price_per_m2": "Preis pro m²",
+      "confidence": "Vertrauensintervall",
+      "model_info": "Modellinformationen",
+      "model_type": "Modell",
+      "r2_score": "R²-Score",
+      "training_data": "Datenquelle",
+      "last_updated": "Letzte Aktualisierung"
+    },
+    "back": "Neue Simulation"
+  },
+  "footer": {
+    "description": "Plattform für Steuer- und Immobilienvergleiche Frankreich–Schweiz.",
+    "legal": "Alle Rechte vorbehalten."
+  }
 }

@@ -14,6 +14,11 @@ import logging
 from predict_rent_router import router as predict_rent_router
 from routers.fiscal_router import router as fiscal_router
 from routers.rag_advisor import router as rag_router
+from routers.pdf_router import router as pdf_router
+
+# Import des modules core
+from core.exceptions import SwissRelocatorError, register_exception_handlers
+from core.rate_limiter import rate_limit_middleware
 
 # ============================================
 # CONFIGURATION LOGGING
@@ -83,10 +88,25 @@ app.add_middleware(
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
+
+# Rate limiting sur /api/v1/*
+app.middleware("http")(rate_limit_middleware)
+
+
+# Security headers
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
 # Middleware de logging des requêtes
 @app.middleware("http")
@@ -111,6 +131,10 @@ async def log_requests(request: Request, call_next):
 # ============================================
 # GESTIONNAIRE D'ERREURS
 # ============================================
+
+# Handlers pour les exceptions métier SwissRelocator
+register_exception_handlers(app)
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -139,6 +163,9 @@ app.include_router(fiscal_router)
 
 # RAG Advisor
 app.include_router(rag_router, prefix="/api/v1", tags=["RAG Advisor"])
+
+# PDF Reports
+app.include_router(pdf_router)
 
 
 # ============================================

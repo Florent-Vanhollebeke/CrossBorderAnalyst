@@ -5,6 +5,19 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+const REQUEST_TIMEOUT_MS = 15_000;
+
+/** Mappe les codes HTTP vers des messages utilisateur sans révéler l'internale. */
+const HTTP_ERROR_MESSAGES: Record<number, string> = {
+  400: 'Paramètres invalides.',
+  401: 'Authentification requise.',
+  403: 'Accès refusé.',
+  404: 'Ressource introuvable.',
+  429: 'Trop de requêtes. Réessayez dans une minute.',
+  500: 'Erreur serveur temporaire.',
+  503: 'Service indisponible.',
+};
+
 // ============================================
 // TYPES
 // ============================================
@@ -115,24 +128,34 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    });
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: 'Unknown error' }));
-      throw {
-        detail: error.detail || `HTTP ${response.status}`,
-        status: response.status,
-      } as ApiError;
+      if (!response.ok) {
+        const userMessage =
+          HTTP_ERROR_MESSAGES[response.status] ?? 'Une erreur est survenue.';
+        throw { detail: userMessage, status: response.status } as ApiError;
+      }
+
+      return response.json();
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw { detail: 'La requête a expiré. Réessayez.', status: 408 } as ApiError;
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    return response.json();
   }
 
   // ============================================

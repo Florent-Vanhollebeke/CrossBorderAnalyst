@@ -1,21 +1,37 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { updateSession } from './lib/supabase/middleware';
 
 const intlMiddleware = createMiddleware({
-  locales: ['fr', 'en'],
+  locales: ['fr', 'en', 'de'],
   defaultLocale: 'fr',
 });
 
-export default async function middleware(request: NextRequest) {
-  // First, we get a response from next-intl (i18n routing layer)
-  const response = intlMiddleware(request);
+function applySecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set(
+    'Permissions-Policy',
+    'geolocation=(), microphone=(), camera=(), payment=()'
+  );
+  // HSTS uniquement en production (HTTPS)
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
+    );
+  }
+  return response;
+}
 
-  // Then, we pass that response and the request into Supabase's updateSession
-  // to ensure cookies are refreshed correctly across internationalized routes.
-  return await updateSession(request, response);
+export default async function middleware(request: NextRequest) {
+  const response = intlMiddleware(request);
+  const sessionResponse = await updateSession(request, response);
+  return applySecurityHeaders(sessionResponse);
 }
 
 export const config = {
-  matcher: ['/', '/(fr|en)/:path*'],
+  matcher: ['/', '/(fr|en|de)/:path*'],
 };

@@ -66,7 +66,28 @@ export function RentResults({ result, onBack }: RentResultsProps) {
             <p className="mt-2 text-lg font-semibold text-gray-900">
               {formatCHF(result.confidence_range.min_chf)} &ndash; {formatCHF(result.confidence_range.max_chf)}
             </p>
-            <p className="mt-1 text-sm text-gray-500">
+            {/* Barre visuelle min → prédiction → max */}
+            {(() => {
+              const range = result.confidence_range.max_chf - result.confidence_range.min_chf;
+              const pct = range > 0
+                ? ((result.predicted_rent_chf - result.confidence_range.min_chf) / range) * 100
+                : 50;
+              return (
+                <div className="mt-3">
+                  <div className="relative h-2 rounded-full bg-gray-200">
+                    <div
+                      className="absolute top-1/2 h-4 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-600"
+                      style={{ left: `${pct}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 flex justify-between text-xs text-gray-400">
+                    <span>{formatCHF(result.confidence_range.min_chf)}</span>
+                    <span>{formatCHF(result.confidence_range.max_chf)}</span>
+                  </div>
+                </div>
+              );
+            })()}
+            <p className="mt-2 text-sm text-gray-500">
               MAE: &plusmn;{formatCHF(result.confidence_range.mae_chf)}
             </p>
           </CardContent>
@@ -81,19 +102,19 @@ export function RentResults({ result, onBack }: RentResultsProps) {
         <CardContent>
           <dl className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <dt className="text-gray-500">Modele</dt>
+              <dt className="text-gray-500">{t('rent.model_type')}</dt>
               <dd className="font-medium text-gray-900">{result.model_info.model_type}</dd>
             </div>
             <div>
-              <dt className="text-gray-500">R2 score</dt>
+              <dt className="text-gray-500">{t('rent.r2_score')}</dt>
               <dd className="font-medium text-gray-900">{(result.model_info.r2_score * 100).toFixed(1)}%</dd>
             </div>
             <div>
-              <dt className="text-gray-500">Donnees</dt>
+              <dt className="text-gray-500">{t('rent.training_data')}</dt>
               <dd className="font-medium text-gray-900">{result.model_info.training_data}</dd>
             </div>
             <div>
-              <dt className="text-gray-500">Mise a jour</dt>
+              <dt className="text-gray-500">{t('rent.last_updated')}</dt>
               <dd className="font-medium text-gray-900">{result.model_info.last_updated}</dd>
             </div>
           </dl>

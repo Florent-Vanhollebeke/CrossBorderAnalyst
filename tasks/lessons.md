@@ -29,3 +29,9 @@
 11. **Imports relatifs vs absolus** : Dans ce projet, `app/` est la racine Python (uvicorn lance depuis `backend/app/`). Les imports doivent etre `from routers.x import ...` et non `from app.routers.x import ...`. Les tests ajoutent `sys.path.insert(0, "app")`.
 
 12. **print() vs logging** : Toujours utiliser `logging.getLogger(__name__)` au lieu de `print()` pour les erreurs. Le logging structure est filtrable, configurable et ne pollue pas stdout.
+
+## 2026-03-14 — Violation TDD (sprint P1→P3)
+
+13. **TDD obligatoire pour TOUT le projet** : J'ai écrit `exceptions.py`, `rate_limiter.py` et `pdf_generator.py` sans écrire les tests en premier. Règle CLAUDE.md violée. **Ne jamais écrire du code de production sans test écrit et validé avant.** Cela s'applique à tous les modules, sans exception, même les modules "simples" ou de sécurité.
+
+14. **Cycle à respecter sans exception** : Rouge (test qui échoue) → Vert (implémentation minimale) → Refactor. Ne jamais sauter le Rouge. Si l'envie de coder l'implémentation vient avant les tests, c'est un signal d'alarme.

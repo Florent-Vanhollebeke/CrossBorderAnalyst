@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-const FISCAL_CITIES = ['Lyon', 'Geneve', 'Lausanne', 'Zurich', 'Basel'] as const;
+const ALL_FISCAL_CITIES = ['Lyon', 'Geneve', 'Lausanne', 'Zurich', 'Basel'] as const;
 
 interface FiscalFormProps {
   onResult: (results: CompareFiscalResponse[]) => void;
@@ -41,17 +41,9 @@ export function FiscalForm({ onResult }: FiscalFormProps) {
     setLoading(true);
     setError(null);
     try {
-      // Compare selected city + Lyon (for FR vs CH comparison)
-      const requests = data.city === 'Lyon'
-        ? FISCAL_CITIES.filter(c => c !== 'Lyon').map(city =>
-            api.compareFiscal({ ...data, city })
-          )
-        : [
-            api.compareFiscal({ ...data, city: 'Lyon' }),
-            api.compareFiscal(data),
-          ];
-
-      const results = await Promise.all(requests);
+      const results = await Promise.all(
+        ALL_FISCAL_CITIES.map(city => api.compareFiscal({ ...data, city }))
+      );
       onResult(results);
     } catch (err) {
       const apiErr = err as ApiError;
@@ -97,21 +89,6 @@ export function FiscalForm({ onResult }: FiscalFormProps) {
               error={errors.average_employee_salary?.message}
               {...register('average_employee_salary', { valueAsNumber: true })}
             />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-              {t('city')}
-            </label>
-            <select
-              id="city"
-              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-              {...register('city')}
-            >
-              {FISCAL_CITIES.map((city) => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
           </div>
 
           {error && (

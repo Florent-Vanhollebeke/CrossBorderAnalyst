@@ -225,10 +225,11 @@ async def compare_fiscal(request: CompareFiscalRequest):
     """
     try:
         return calculate_fiscal_comparison(request)
-    except KeyError as e:
+    except KeyError:
+        logger.exception("Données fiscales manquantes")
         raise HTTPException(
             status_code=400,
-            detail=f"Données fiscales manquantes pour la ville : {e}"
+            detail="Paramètres invalides. Vérifiez les données fournies."
         )
     except Exception:
         logger.exception("Erreur lors du calcul fiscal")
