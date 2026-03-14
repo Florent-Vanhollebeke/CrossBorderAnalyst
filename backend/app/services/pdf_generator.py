@@ -17,6 +17,9 @@ BRAND_COLOR = (16, 185, 129)   # emerald-500
 DARK_COLOR  = (17,  24,  39)   # gray-900
 GRAY_COLOR  = (107, 114, 128)  # gray-500
 LIGHT_GRAY  = (249, 250, 251)  # gray-50
+BLUE_COLOR  = (59, 130, 246)   # blue-500
+
+CHF_TO_EUR  = 1.064
 
 
 def _fmt(amount: float, currency: str) -> str:
@@ -37,34 +40,60 @@ def _pct(rate: float) -> str:
 class PDFGenerator:
     """Genere des rapports PDF pour les simulations SwissRelocator."""
 
+    # ------------------------------------------
+    # RAPPORTS PUBLICS
+    # ------------------------------------------
+
     def generate_fiscal_report(self, results: list[dict]) -> bytes:
-        """
-        Genere un rapport PDF de comparaison fiscale.
-
-        Args:
-            results: liste de dicts conformes au schema CompareFiscalResponse
-
-        Returns:
-            Contenu PDF en bytes
-        """
+        """Rapport PDF de comparaison fiscale seule."""
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         pdf.set_margins(20, 20, 20)
 
-        self._add_header(pdf)
+        self._add_header(pdf, "Rapport de comparaison fiscale France / Suisse")
         self._add_summary_kpis(pdf, results)
         self._add_comparison_table(pdf, results)
         self._add_footer(pdf)
 
         return bytes(pdf.output())
 
+    def generate_rent_report(self, rent: dict) -> bytes:
+        """Rapport PDF d'estimation de loyer seul."""
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_margins(20, 20, 20)
+
+        self._add_header(pdf, "Rapport d'estimation de loyer commercial")
+        self._add_rent_section(pdf, rent)
+        self._add_footer(pdf)
+
+        return bytes(pdf.output())
+
+    def generate_combined_report(self, fiscal_results: list[dict], rent: dict) -> bytes:
+        """Rapport PDF complet : fiscal + loyer + synthese cout annuel total."""
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_margins(20, 20, 20)
+
+        self._add_header(pdf, "Analyse complete d'implantation France / Suisse")
+        self._add_summary_kpis(pdf, fiscal_results)
+        self._add_comparison_table(pdf, fiscal_results)
+        pdf.ln(4)
+        self._add_rent_section(pdf, rent)
+        pdf.ln(4)
+        self._add_total_cost_synthesis(pdf, fiscal_results, rent)
+        self._add_footer(pdf)
+
+        return bytes(pdf.output())
+
     # ------------------------------------------
-    # SECTIONS
+    # SECTIONS COMMUNES
     # ------------------------------------------
 
-    def _add_header(self, pdf: FPDF) -> None:
-        # Bande de titre
+    def _add_header(self, pdf: FPDF, subtitle: str) -> None:
         pdf.set_fill_color(*BRAND_COLOR)
         pdf.rect(0, 0, 210, 28, style="F")
 
@@ -75,8 +104,7 @@ class PDFGenerator:
 
         pdf.set_font("Helvetica", "", 10)
         pdf.set_text_color(220, 252, 231)
-        pdf.cell(0, 6, "Rapport de comparaison fiscale France / Suisse",
-                 new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="R")
+        pdf.cell(0, 6, subtitle, new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="R")
 
         pdf.set_y(30)
         pdf.set_font("Helvetica", "", 8)
@@ -85,6 +113,24 @@ class PDFGenerator:
                  new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="R")
         pdf.ln(4)
 
+    def _add_footer(self, pdf: FPDF) -> None:
+        pdf.ln(10)
+        pdf.set_draw_color(*BRAND_COLOR)
+        pdf.line(20, pdf.get_y(), 190, pdf.get_y())
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "", 7)
+        pdf.set_text_color(*GRAY_COLOR)
+        pdf.multi_cell(
+            0, 4,
+            "Rapport genere par SwissRelocator - Donnees indicatives uniquement. "
+            "Les taux fiscaux peuvent evoluer. Consultez un expert-comptable pour toute decision.",
+            align="C",
+        )
+
+    # ------------------------------------------
+    # SECTION FISCALE
+    # ------------------------------------------
+
     def _add_summary_kpis(self, pdf: FPDF, results: list[dict]) -> None:
         lyon = next((r for r in results if r.get("country") == "FR"), None)
         swiss = [r for r in results if r.get("country") == "CH"]
@@ -92,7 +138,7 @@ class PDFGenerator:
             return
 
         best = max(swiss, key=lambda r: r["net_result"])
-        savings = best["net_result"] * 1.064 - lyon["net_result"]
+        savings = best["net_result"] * CHF_TO_EUR - lyon["net_result"]
 
         pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*DARK_COLOR)
@@ -132,11 +178,10 @@ class PDFGenerator:
     def _add_comparison_table(self, pdf: FPDF, results: list[dict]) -> None:
         pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*DARK_COLOR)
-        pdf.cell(0, 8, "Comparaison detaillee", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.cell(0, 8, "Comparaison fiscale detaillee", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
         label_w = 40
-        # Zone utile = 210mm - 2*20mm marges = 170mm
         col_w = (170 - label_w) // max(len(results), 1)
         row_h = 8
         cities = [r["city"] for r in results]
@@ -175,16 +220,151 @@ class PDFGenerator:
                 pdf.cell(col_w, row_h, getter(r), fill=True, align="R")
             pdf.ln()
 
-    def _add_footer(self, pdf: FPDF) -> None:
-        pdf.ln(10)
-        pdf.set_draw_color(*BRAND_COLOR)
-        pdf.line(20, pdf.get_y(), 190, pdf.get_y())
-        pdf.ln(3)
-        pdf.set_font("Helvetica", "", 7)
+    # ------------------------------------------
+    # SECTION LOYER
+    # ------------------------------------------
+
+    def _add_rent_section(self, pdf: FPDF, rent: dict) -> None:
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.set_text_color(*DARK_COLOR)
+        pdf.cell(0, 8, "Estimation du loyer commercial", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(2)
+
+        # KPI principal
+        box_w = 170
+        box_h = 26
+        y = pdf.get_y()
+        x = pdf.get_x()
+
+        pdf.set_fill_color(240, 253, 244)  # emerald-50
+        pdf.rect(x, y, box_w, box_h, style="FD")
+
+        pdf.set_xy(x + 6, y + 4)
+        pdf.set_font("Helvetica", "", 8)
         pdf.set_text_color(*GRAY_COLOR)
-        pdf.multi_cell(
-            0, 4,
-            "Rapport genere par SwissRelocator - Donnees indicatives uniquement. "
-            "Les taux fiscaux peuvent evoluer. Consultez un expert-comptable pour toute decision.",
-            align="C",
-        )
+        city = rent.get("city", "")
+        surface = rent.get("surface", "")
+        prop_type = rent.get("property_type", "bureau")
+        pdf.cell(0, 5, f"Loyer estime - {city} - {surface} m2 ({prop_type})")
+
+        pdf.set_xy(x + 6, y + 11)
+        pdf.set_font("Helvetica", "B", 16)
+        pdf.set_text_color(*BRAND_COLOR)
+        chf = rent.get("predicted_rent_chf", 0)
+        eur = rent.get("predicted_rent_eur", 0)
+        pdf.cell(80, 10, f"{chf:,.0f} CHF/mois".replace(",", "'"))
+
+        pdf.set_xy(x + 90, y + 14)
+        pdf.set_font("Helvetica", "", 10)
+        pdf.set_text_color(*GRAY_COLOR)
+        pdf.cell(0, 6, f"~ {eur:,.0f} EUR/mois".replace(",", " "))
+
+        pdf.set_y(y + box_h + 6)
+
+        # Grille details
+        row_h = 7
+        col1 = 85
+        col2 = 85
+
+        details = [
+            ("Prix au m2", f"{rent.get('price_per_m2_chf', 0):.1f} CHF/m2"),
+            ("Loyer annuel", f"{chf * 12:,.0f} CHF/an".replace(",", "'")),
+        ]
+        conf = rent.get("confidence_range", {})
+        if conf:
+            details.append(("Fourchette basse", f"{conf.get('min_chf', 0):,.0f} CHF/mois".replace(",", "'")))
+            details.append(("Fourchette haute", f"{conf.get('max_chf', 0):,.0f} CHF/mois".replace(",", "'")))
+
+        for i, (label, value) in enumerate(details):
+            fill = i % 2 == 0
+            pdf.set_fill_color(*LIGHT_GRAY) if fill else pdf.set_fill_color(255, 255, 255)
+            pdf.set_font("Helvetica", "", 8)
+            pdf.set_text_color(*GRAY_COLOR)
+            pdf.cell(col1, row_h, label, fill=True)
+            pdf.set_font("Helvetica", "B", 8)
+            pdf.set_text_color(*DARK_COLOR)
+            pdf.cell(col2, row_h, value, fill=True, align="R", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+        # Modele info
+        model = rent.get("model_info", {})
+        if model:
+            pdf.ln(3)
+            pdf.set_font("Helvetica", "", 7)
+            pdf.set_text_color(*GRAY_COLOR)
+            r2 = model.get("r2_score", 0)
+            mtype = model.get("model_type", "")
+            data = model.get("training_data", "")
+            pdf.cell(0, 5, f"Modele : {mtype} | R2={r2:.3f} | Donnees : {data}",
+                     new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+    # ------------------------------------------
+    # SECTION SYNTHESE COUT TOTAL (rapport combine)
+    # ------------------------------------------
+
+    def _add_total_cost_synthesis(self, pdf: FPDF, fiscal_results: list[dict], rent: dict) -> None:
+        """Synthese : cout total annuel = loyer annuel + cout employeur, par ville."""
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.set_text_color(*DARK_COLOR)
+        pdf.cell(0, 8, "Synthese : Cout total annuel d'implantation", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(1)
+        pdf.set_font("Helvetica", "", 8)
+        pdf.set_text_color(*GRAY_COLOR)
+        pdf.cell(0, 5, "(Cout employeur annuel + loyer annuel converti en devise locale)",
+                 new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(3)
+
+        rent_chf_annual = rent.get("predicted_rent_chf", 0) * 12
+        rent_eur_annual = rent.get("predicted_rent_eur", 0) * 12
+
+        label_w = 55
+        col_w = (170 - label_w) // max(len(fiscal_results), 1)
+        row_h = 8
+
+        # Header
+        pdf.set_fill_color(*DARK_COLOR)
+        pdf.set_text_color(255, 255, 255)
+        pdf.set_font("Helvetica", "B", 8)
+        pdf.cell(label_w, row_h, "Poste", fill=True)
+        for r in fiscal_results:
+            pdf.cell(col_w, row_h, f"{r['city']}", fill=True, align="C")
+        pdf.ln()
+
+        # Loyer annuel row
+        pdf.set_fill_color(*LIGHT_GRAY)
+        pdf.set_text_color(*DARK_COLOR)
+        pdf.set_font("Helvetica", "", 8)
+        pdf.cell(label_w, row_h, "Loyer annuel", fill=True)
+        for r in fiscal_results:
+            if r["currency"] == "CHF":
+                pdf.cell(col_w, row_h, _fmt(rent_chf_annual, "CHF"), fill=True, align="R")
+            else:
+                pdf.cell(col_w, row_h, _fmt(rent_eur_annual, "EUR"), fill=True, align="R")
+        pdf.ln()
+
+        # Cout employeur row
+        pdf.set_fill_color(255, 255, 255)
+        pdf.cell(label_w, row_h, "Cout total employeur", fill=True)
+        for r in fiscal_results:
+            pdf.cell(col_w, row_h, _fmt(r["total_employer_cost"], r["currency"]), fill=True, align="R")
+        pdf.ln()
+
+        # Total row
+        pdf.set_fill_color(240, 253, 244)
+        pdf.set_font("Helvetica", "B", 8)
+        pdf.set_text_color(*BRAND_COLOR)
+        pdf.cell(label_w, row_h, "Total charges annuelles", fill=True)
+        for r in fiscal_results:
+            rent_local = rent_chf_annual if r["currency"] == "CHF" else rent_eur_annual
+            total = r["total_employer_cost"] + rent_local
+            pdf.cell(col_w, row_h, _fmt(total, r["currency"]), fill=True, align="R")
+        pdf.ln()
+
+        # Resultat net apres loyer row
+        pdf.set_fill_color(16, 185, 129)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(label_w, row_h, "Resultat net apres loyer", fill=True)
+        for r in fiscal_results:
+            rent_local = rent_chf_annual if r["currency"] == "CHF" else rent_eur_annual
+            net_after_rent = r["net_result"] - rent_local
+            pdf.cell(col_w, row_h, _fmt(net_after_rent, r["currency"]), fill=True, align="R")
+        pdf.ln()

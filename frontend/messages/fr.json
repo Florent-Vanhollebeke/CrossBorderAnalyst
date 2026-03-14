@@ -37,6 +37,8 @@
     "title": "Simulateur",
     "tab_fiscal": "Comparaison fiscale",
     "tab_rent": "Prédiction loyer",
+    "combined_ready": "Analyse complète disponible",
+    "combined_ready_sub": "Téléchargez le rapport fiscal + loyer en un seul PDF.",
     "fiscal": {
       "revenue": "Chiffre d'affaires annuel (EUR)",
       "salary_director": "Salaire dirigeant annuel brut (EUR)",

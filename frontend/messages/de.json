@@ -37,6 +37,8 @@
     "title": "Simulator",
     "tab_fiscal": "Steuervergleich",
     "tab_rent": "Mietvorhersage",
+    "combined_ready": "Vollständige Analyse verfügbar",
+    "combined_ready_sub": "Laden Sie den Steuer- und Mietbericht als einzelnes PDF herunter.",
     "fiscal": {
       "revenue": "Jahresumsatz (EUR)",
       "salary_director": "Bruttogehalt Geschäftsführer jährlich (EUR)",

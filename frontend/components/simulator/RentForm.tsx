@@ -60,7 +60,7 @@ export function RentForm({ onResult }: RentFormProps) {
           id: Date.now().toString(),
           type: 'rent' as const,
           timestamp: new Date().toISOString(),
-          label: `${data.city} — ${data.surface} m² — ${result.predicted_rent.toLocaleString()} CHF/mois`,
+          label: `${data.city} — ${data.surface} m² — ${result.predicted_rent_chf.toLocaleString()} CHF/mois`,
           params: data,
         };
         const raw = localStorage.getItem('swissrelocator_history');

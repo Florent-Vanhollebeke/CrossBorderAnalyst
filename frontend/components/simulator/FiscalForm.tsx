@@ -33,7 +33,6 @@ export function FiscalForm({ onResult }: FiscalFormProps) {
       salary_director: 80000,
       num_employees: 5,
       average_employee_salary: 0,
-      city: 'Geneve',
     },
   });
 

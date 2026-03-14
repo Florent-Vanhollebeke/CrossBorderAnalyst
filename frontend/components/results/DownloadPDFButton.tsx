@@ -49,7 +49,7 @@ export function DownloadPDFButton({ results }: DownloadPDFButtonProps) {
   return (
     <div className="flex flex-col items-start gap-1">
       <Button
-        variant="outline"
+        variant="secondary"
         onClick={handleDownload}
         disabled={loading || results.length === 0}
         className="gap-2"

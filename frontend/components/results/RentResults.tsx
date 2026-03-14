@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, Home, TrendingUp, Info } from 'lucide-react';
+import { ArrowLeft, Home, TrendingUp, Info, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PredictRentResponse } from '@/lib/api';
@@ -14,15 +15,57 @@ interface RentResultsProps {
 
 export function RentResults({ result, onBack }: RentResultsProps) {
   const t = useTranslations('results');
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
+  async function handleDownloadPdf() {
+    setPdfLoading(true);
+    setPdfError(null);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+      const resp = await fetch(`${apiUrl}/api/v1/generate-pdf/rent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(result),
+      });
+      if (!resp.ok) throw new Error(`${resp.status}`);
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'swissrelocator_rapport_loyer.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setPdfError('Impossible de générer le PDF.');
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900">{t('rent.title')}</h1>
-        <Button variant="secondary" onClick={onBack} className="gap-2">
-          <ArrowLeft className="h-4 w-4" />
-          {t('back')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-end gap-1">
+            <button
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading}
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:opacity-50"
+            >
+              <FileDown className="h-4 w-4" />
+              {pdfLoading ? 'Génération…' : 'Télécharger PDF'}
+            </button>
+            {pdfError && <p className="text-xs text-red-500">{pdfError}</p>}
+          </div>
+          <Button variant="secondary" onClick={onBack} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            {t('back')}
+          </Button>
+        </div>
       </div>
 
       {/* Main KPI */}

@@ -37,6 +37,8 @@
     "title": "Simulator",
     "tab_fiscal": "Tax comparison",
     "tab_rent": "Rent prediction",
+    "combined_ready": "Full analysis ready",
+    "combined_ready_sub": "Download the fiscal + rent report as a single PDF.",
     "fiscal": {
       "revenue": "Annual revenue (EUR)",
       "salary_director": "Director annual gross salary (EUR)",
