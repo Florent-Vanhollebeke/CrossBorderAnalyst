@@ -41,3 +41,15 @@ backend/data/
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Audit reports (générés localement, ne pas commiter)
+backend/bandit_report.json
+frontend/audit_frontend.json
+frontend/npm_audit.json
+frontend/tsconfig.tsbuildinfo
+
+# Claude Code settings
+.claude/settings.local.json
+
+# Windows artifacts
+nul
