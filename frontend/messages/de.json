@@ -2,7 +2,8 @@
   "nav": {
     "home": "Startseite",
     "simulator": "Simulator",
-    "about": "Über uns"
+    "about": "Über uns",
+    "account": "Mein Konto"
   },
   "hero": {
     "title": "Optimieren Sie Ihre Ansiedlung in der Schweiz",
@@ -86,6 +87,32 @@
       "last_updated": "Letzte Aktualisierung"
     },
     "back": "Neue Simulation"
+  },
+  "account": {
+    "title": "Mein Konto",
+    "profile": {
+      "title": "Profil",
+      "email": "E-Mail-Adresse",
+      "member_since": "Mitglied seit"
+    },
+    "stats": {
+      "title": "Statistiken",
+      "total_simulations": "Durchgeführte Simulationen",
+      "last_activity": "Letzte Aktivität",
+      "never": "Keine"
+    },
+    "history": {
+      "title": "Verlauf",
+      "empty": "Noch keine Simulationen.",
+      "empty_cta": "Erste Simulation starten",
+      "type_fiscal": "Steuer",
+      "type_rent": "Miete"
+    },
+    "quick_actions": {
+      "title": "Schnellaktionen",
+      "go_to_simulator": "Simulator öffnen",
+      "logout": "Abmelden"
+    }
   },
   "footer": {
     "description": "Plattform für Steuer- und Immobilienvergleiche Frankreich–Schweiz.",

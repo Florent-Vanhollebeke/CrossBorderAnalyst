@@ -2,7 +2,8 @@
   "nav": {
     "home": "Accueil",
     "simulator": "Simulateur",
-    "about": "À propos"
+    "about": "À propos",
+    "account": "Mon espace"
   },
   "hero": {
     "title": "Optimisez votre implantation en Suisse",
@@ -86,6 +87,32 @@
       "last_updated": "Mise à jour"
     },
     "back": "Nouvelle simulation"
+  },
+  "account": {
+    "title": "Mon espace",
+    "profile": {
+      "title": "Profil",
+      "email": "Adresse e-mail",
+      "member_since": "Membre depuis"
+    },
+    "stats": {
+      "title": "Statistiques",
+      "total_simulations": "Simulations effectuées",
+      "last_activity": "Dernière activité",
+      "never": "Aucune"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "Aucune simulation pour l'instant.",
+      "empty_cta": "Lancer ma première simulation",
+      "type_fiscal": "Fiscalité",
+      "type_rent": "Loyer"
+    },
+    "quick_actions": {
+      "title": "Actions rapides",
+      "go_to_simulator": "Ouvrir le simulateur",
+      "logout": "Se déconnecter"
+    }
   },
   "footer": {
     "description": "Plateforme de comparaison fiscale et immobilière France-Suisse.",

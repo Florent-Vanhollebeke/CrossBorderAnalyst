@@ -8,7 +8,7 @@ import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const locales = ['fr', 'en'];
+const locales = ['fr', 'en', 'de'];
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -18,9 +18,13 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   return {
     title: locale === 'fr'
       ? 'SwissRelocator - Comparaison fiscale France-Suisse'
+      : locale === 'de'
+      ? 'SwissRelocator - Steuervergleich Frankreich-Schweiz'
       : 'SwissRelocator - France-Switzerland Tax Comparison',
     description: locale === 'fr'
       ? 'Simulez votre implantation en Suisse : fiscalite, loyers, charges sociales.'
+      : locale === 'de'
+      ? 'Simulieren Sie Ihre Niederlassung in der Schweiz: Steuern, Mieten, Sozialabgaben.'
       : 'Simulate your relocation to Switzerland: taxation, rents, social charges.',
   };
 }

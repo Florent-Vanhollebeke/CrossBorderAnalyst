@@ -3,13 +3,15 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { Building2 } from 'lucide-react';
+import { Building2, LayoutDashboard } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { AuthButton } from './AuthButton';
+import { useAuth } from '@/hooks/useAuth';
 
 export function Header() {
   const t = useTranslations('nav');
   const { locale } = useParams();
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
@@ -32,6 +34,15 @@ export function Header() {
           >
             {t('simulator')}
           </Link>
+          {user && (
+            <Link
+              href={`/${locale}/account`}
+              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-brand-600 transition-colors"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              {t('account')}
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-3">

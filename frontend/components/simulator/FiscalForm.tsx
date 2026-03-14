@@ -45,6 +45,23 @@ export function FiscalForm({ onResult }: FiscalFormProps) {
         ALL_FISCAL_CITIES.map(city => api.compareFiscal({ ...data, city }))
       );
       onResult(results);
+      // Historique localStorage
+      try {
+        const best = results.filter(r => r.country === 'CH').reduce((a, b) =>
+          a.net_result > b.net_result ? a : b
+        );
+        const entry = {
+          id: Date.now().toString(),
+          type: 'fiscal' as const,
+          timestamp: new Date().toISOString(),
+          label: `Lyon vs ${best.city} — net ${best.net_result.toLocaleString()} ${best.currency}`,
+          params: data,
+        };
+        const raw = localStorage.getItem('swissrelocator_history');
+        const history = raw ? JSON.parse(raw) : [];
+        history.unshift(entry);
+        localStorage.setItem('swissrelocator_history', JSON.stringify(history.slice(0, 50)));
+      } catch { /* localStorage non disponible */ }
     } catch (err) {
       const apiErr = err as ApiError;
       setError(apiErr.detail || 'Erreur lors du calcul fiscal');

@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home",
     "simulator": "Simulator",
-    "about": "About"
+    "about": "About",
+    "account": "My account"
   },
   "hero": {
     "title": "Optimize your relocation to Switzerland",
@@ -86,6 +87,32 @@
       "last_updated": "Last updated"
     },
     "back": "New simulation"
+  },
+  "account": {
+    "title": "My account",
+    "profile": {
+      "title": "Profile",
+      "email": "Email address",
+      "member_since": "Member since"
+    },
+    "stats": {
+      "title": "Statistics",
+      "total_simulations": "Simulations run",
+      "last_activity": "Last activity",
+      "never": "None"
+    },
+    "history": {
+      "title": "History",
+      "empty": "No simulations yet.",
+      "empty_cta": "Run my first simulation",
+      "type_fiscal": "Tax",
+      "type_rent": "Rent"
+    },
+    "quick_actions": {
+      "title": "Quick actions",
+      "go_to_simulator": "Open simulator",
+      "logout": "Log out"
+    }
   },
   "footer": {
     "description": "France-Switzerland tax and real estate comparison platform.",

@@ -54,6 +54,20 @@ export function RentForm({ onResult }: RentFormProps) {
     try {
       const result = await api.predictRent(data);
       onResult(result);
+      // Historique localStorage
+      try {
+        const entry = {
+          id: Date.now().toString(),
+          type: 'rent' as const,
+          timestamp: new Date().toISOString(),
+          label: `${data.city} — ${data.surface} m² — ${result.predicted_rent.toLocaleString()} CHF/mois`,
+          params: data,
+        };
+        const raw = localStorage.getItem('swissrelocator_history');
+        const history = raw ? JSON.parse(raw) : [];
+        history.unshift(entry);
+        localStorage.setItem('swissrelocator_history', JSON.stringify(history.slice(0, 50)));
+      } catch { /* localStorage non disponible */ }
     } catch (err) {
       const apiErr = err as ApiError;
       setError(apiErr.detail || 'Erreur lors de la prediction');
