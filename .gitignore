@@ -30,11 +30,10 @@ Thumbs.db
 *.log
 logs/
 
-# ML Models (large files)
-*.pkl
+# ML Models (large files — exclus sauf ceux de ce projet)
 *.onnx
 
-# Data (raw, processed, indexes)
+# Data (raw, processed — exclus sauf index RAG)
 backend/data/
 
 # Testing
