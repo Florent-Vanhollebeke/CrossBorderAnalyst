@@ -135,7 +135,9 @@ class PDFGenerator:
         pdf.cell(0, 8, "Comparaison detaillee", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
-        col_w = 32
+        label_w = 40
+        # Zone utile = 210mm - 2*20mm marges = 170mm
+        col_w = (170 - label_w) // max(len(results), 1)
         row_h = 8
         cities = [r["city"] for r in results]
         currencies = [r["currency"] for r in results]
@@ -143,7 +145,7 @@ class PDFGenerator:
         pdf.set_fill_color(*BRAND_COLOR)
         pdf.set_text_color(255, 255, 255)
         pdf.set_font("Helvetica", "B", 8)
-        pdf.cell(40, row_h, "", fill=True)
+        pdf.cell(label_w, row_h, "", fill=True)
         for city, curr in zip(cities, currencies):
             pdf.cell(col_w, row_h, f"{city} ({curr})", fill=True, align="C")
         pdf.ln()
@@ -168,7 +170,7 @@ class PDFGenerator:
             else:
                 pdf.set_font("Helvetica", "", 8)
 
-            pdf.cell(40, row_h, label, fill=True)
+            pdf.cell(label_w, row_h, label, fill=True)
             for r in results:
                 pdf.cell(col_w, row_h, getter(r), fill=True, align="R")
             pdf.ln()
