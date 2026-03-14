@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "simulator": "Simulator",
+    "advisor": "AI Advisor",
     "about": "About",
     "account": "My account"
   },

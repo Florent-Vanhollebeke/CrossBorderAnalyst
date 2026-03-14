@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { fiscalSchema, type FiscalFormData } from '@/lib/schemas';
 import { api, type CompareFiscalResponse, type ApiError } from '@/lib/api';
+import { saveSimulation } from '@/lib/simulations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,23 +45,17 @@ export function FiscalForm({ onResult }: FiscalFormProps) {
         ALL_FISCAL_CITIES.map(city => api.compareFiscal({ ...data, city }))
       );
       onResult(results);
-      // Historique localStorage
+      // Historique Supabase (avec fallback localStorage)
       try {
         const best = results.filter(r => r.country === 'CH').reduce((a, b) =>
           a.net_result > b.net_result ? a : b
         );
-        const entry = {
-          id: Date.now().toString(),
-          type: 'fiscal' as const,
-          timestamp: new Date().toISOString(),
+        await saveSimulation({
+          type: 'fiscal',
           label: `Lyon vs ${best.city} — net ${best.net_result.toLocaleString()} ${best.currency}`,
-          params: data,
-        };
-        const raw = localStorage.getItem('swissrelocator_history');
-        const history = raw ? JSON.parse(raw) : [];
-        history.unshift(entry);
-        localStorage.setItem('swissrelocator_history', JSON.stringify(history.slice(0, 50)));
-      } catch { /* localStorage non disponible */ }
+          params: data as Record<string, unknown>,
+        });
+      } catch { /* historique non critique */ }
     } catch (err) {
       const apiErr = err as ApiError;
       setError(apiErr.detail || 'Erreur lors du calcul fiscal');

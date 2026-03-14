@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { rentSchema, type RentFormData } from '@/lib/schemas';
 import { api, type PredictRentResponse, type ApiError, type SupportedCity } from '@/lib/api';
+import { saveSimulation } from '@/lib/simulations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -54,20 +55,14 @@ export function RentForm({ onResult }: RentFormProps) {
     try {
       const result = await api.predictRent(data);
       onResult(result, data);
-      // Historique localStorage
+      // Historique Supabase (avec fallback localStorage)
       try {
-        const entry = {
-          id: Date.now().toString(),
-          type: 'rent' as const,
-          timestamp: new Date().toISOString(),
+        await saveSimulation({
+          type: 'rent',
           label: `${data.city} — ${data.surface} m² — ${result.predicted_rent_chf.toLocaleString()} CHF/mois`,
-          params: data,
-        };
-        const raw = localStorage.getItem('swissrelocator_history');
-        const history = raw ? JSON.parse(raw) : [];
-        history.unshift(entry);
-        localStorage.setItem('swissrelocator_history', JSON.stringify(history.slice(0, 50)));
-      } catch { /* localStorage non disponible */ }
+          params: data as Record<string, unknown>,
+        });
+      } catch { /* historique non critique */ }
     } catch (err) {
       const apiErr = err as ApiError;
       setError(apiErr.detail || 'Erreur lors de la prediction');

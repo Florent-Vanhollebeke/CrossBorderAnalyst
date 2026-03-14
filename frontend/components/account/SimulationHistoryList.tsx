@@ -5,31 +5,18 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { History, TrendingUp, Home } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { loadSimulations, type SimulationEntry } from '@/lib/simulations';
 
-export interface SimulationEntry {
-  id: string;
-  type: 'fiscal' | 'rent';
-  timestamp: string;
-  label: string;
-  params: Record<string, unknown>;
-}
+export type { SimulationEntry };
 
 export function SimulationHistoryList({ locale }: { locale: string }) {
   const t = useTranslations('account.history');
   const [history, setHistory] = useState<SimulationEntry[]>([]);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('swissrelocator_history');
-      const entries: SimulationEntry[] = raw ? JSON.parse(raw) : [];
-      setHistory(
-        entries
-          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-          .slice(0, 10)
-      );
-    } catch {
-      // localStorage non disponible ou données corrompues
-    }
+    loadSimulations()
+      .then((entries) => setHistory(entries.slice(0, 10)))
+      .catch(() => setHistory([]));
   }, []);
 
   return (

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { Building2, LayoutDashboard } from 'lucide-react';
+import { Building2, LayoutDashboard, MessageSquare } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { AuthButton } from './AuthButton';
 import { useAuth } from '@/hooks/useAuth';
@@ -33,6 +33,13 @@ export function Header() {
             className="text-sm font-medium text-gray-600 hover:text-brand-600 transition-colors"
           >
             {t('simulator')}
+          </Link>
+          <Link
+            href={`/${locale}/advisor`}
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-brand-600 transition-colors"
+          >
+            <MessageSquare className="h-4 w-4" />
+            {t('advisor')}
           </Link>
           {user && (
             <Link
