@@ -28,6 +28,7 @@ export async function saveSimulation(
 
     if (user) {
       await supabase.from('simulations').insert({
+        user_id: user.id,
         type: entry.type,
         label: entry.label,
         params: entry.params,

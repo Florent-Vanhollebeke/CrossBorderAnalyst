@@ -22,13 +22,14 @@ class RAGRequest(BaseModel):
 class RAGResponse(BaseModel):
     answer: str
     sources: List[Dict[str, Any]]
+    from_rag: bool = False
 
 
 @router.post("/ask", response_model=RAGResponse)
 async def ask_advisor(request: RAGRequest, service: RAGService = Depends(get_rag_service)):
     try:
-        answer, sources = service.ask(request.question, filters=request.filters)
-        return RAGResponse(answer=answer, sources=sources)
+        answer, sources, from_rag = service.ask(request.question, filters=request.filters)
+        return RAGResponse(answer=answer, sources=sources, from_rag=from_rag)
     except Exception:
         logger.exception("Erreur lors de la requete RAG")
         raise HTTPException(status_code=500, detail="Erreur interne du service RAG")

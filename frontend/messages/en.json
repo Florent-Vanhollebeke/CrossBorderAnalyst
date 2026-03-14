@@ -117,6 +117,21 @@
       "logout": "Log out"
     }
   },
+  "advisor": {
+    "title": "AI Tax Advisor",
+    "subtitle": "Ask your questions about taxation and real estate in France / Switzerland. Answers are based on updated official data.",
+    "chat_title": "AI Tax Advisor",
+    "chat_subtitle": "Powered by official CH/FR fiscal data + Claude",
+    "suggested_title": "Suggested questions",
+    "suggested_hint": "Click a question or ask your own",
+    "loading": "Analysing…",
+    "placeholder": "Ask a question about FR/CH taxation…",
+    "error": "Sorry, the tax advisor is temporarily unavailable. Please try again in a few moments.",
+    "suggested_q1": "What is the corporate tax rate in Geneva?",
+    "suggested_q2": "Compare employer social charges between Lyon and Zurich",
+    "suggested_q3": "What are Basel's tax advantages for companies?",
+    "suggested_q4": "How does corporate income tax work in Switzerland?"
+  },
   "footer": {
     "description": "France-Switzerland tax and real estate comparison platform.",
     "legal": "All rights reserved."

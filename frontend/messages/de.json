@@ -117,6 +117,21 @@
       "logout": "Abmelden"
     }
   },
+  "advisor": {
+    "title": "KI-Steuerberater",
+    "subtitle": "Stellen Sie Fragen zur Besteuerung und Immobilien in Frankreich / der Schweiz. Antworten basieren auf aktuellen Amtsdaten.",
+    "chat_title": "KI-Steuerberater",
+    "chat_subtitle": "Basierend auf offiziellen CH/FR-Steuerdaten + Claude",
+    "suggested_title": "Vorgeschlagene Fragen",
+    "suggested_hint": "Klicken Sie eine Frage an oder stellen Sie Ihre eigene",
+    "loading": "Analyse läuft…",
+    "placeholder": "Stellen Sie eine Frage zur FR/CH-Besteuerung…",
+    "error": "Der Steuerberater ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "suggested_q1": "Wie hoch ist die Körperschaftssteuer in Genf?",
+    "suggested_q2": "Vergleichen Sie Arbeitgeberbeiträge zwischen Lyon und Zürich",
+    "suggested_q3": "Welche Steuervorteile bietet Basel für Unternehmen?",
+    "suggested_q4": "Wie funktioniert die Gewinnsteuer in der Schweiz?"
+  },
   "footer": {
     "description": "Plattform für Steuer- und Immobilienvergleiche Frankreich–Schweiz.",
     "legal": "Alle Rechte vorbehalten."

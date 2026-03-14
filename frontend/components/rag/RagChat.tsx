@@ -1,36 +1,44 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Send, Bot, User, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Source {
-  city?: string;
-  country?: string;
-  type?: string;
+  // Champs retournés par rag_fiscal.py
+  description?: string;
+  doc_type?: string;
+  canton?: string;
+  source?: string;
+  // Champs génériques (compatibilité)
   title?: string;
-  content?: string;
+  type?: string;
+  city?: string;
+  url?: string;
 }
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   sources?: Source[];
+  from_rag?: boolean;
 }
 
-const SUGGESTED_QUESTIONS = [
-  'Quel est le taux d\'imposition sur les sociétés à Genève ?',
-  'Comparez les charges patronales entre Lyon et Zurich',
-  'Quels sont les avantages fiscaux de Bâle pour les entreprises ?',
-  'Comment fonctionne l\'impôt sur les bénéfices en Suisse ?',
-];
-
 export function RagChat() {
+  const t = useTranslations('advisor');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [expandedSources, setExpandedSources] = useState<Set<number>>(new Set());
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const suggestedQuestions = [
+    t('suggested_q1'),
+    t('suggested_q2'),
+    t('suggested_q3'),
+    t('suggested_q4'),
+  ];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -57,15 +65,12 @@ export function RagChat() {
 
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: data.answer, sources: data.sources ?? [] },
+        { role: 'assistant', content: data.answer, sources: data.sources ?? [], from_rag: data.from_rag ?? false },
       ]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        {
-          role: 'assistant',
-          content: 'Désolé, le conseiller fiscal est temporairement indisponible. Réessayez dans quelques instants.',
-        },
+        { role: 'assistant', content: t('error') },
       ]);
     } finally {
       setLoading(false);
@@ -88,8 +93,8 @@ export function RagChat() {
           <Bot className="h-5 w-5 text-emerald-600" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-gray-900">Conseiller fiscal IA</p>
-          <p className="text-xs text-gray-500">Alimenté par les données fiscales officielles CH/FR + Claude</p>
+          <p className="text-sm font-semibold text-gray-900">{t('chat_title')}</p>
+          <p className="text-xs text-gray-500">{t('chat_subtitle')}</p>
         </div>
       </div>
 
@@ -101,11 +106,11 @@ export function RagChat() {
               <Bot className="h-8 w-8 text-emerald-500" />
             </div>
             <div>
-              <p className="text-base font-medium text-gray-800">Questions suggérées</p>
-              <p className="mt-1 text-sm text-gray-500">Cliquez sur une question ou posez la vôtre</p>
+              <p className="text-base font-medium text-gray-800">{t('suggested_title')}</p>
+              <p className="mt-1 text-sm text-gray-500">{t('suggested_hint')}</p>
             </div>
             <div className="grid w-full max-w-lg gap-2">
-              {SUGGESTED_QUESTIONS.map((q) => (
+              {suggestedQuestions.map((q) => (
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
@@ -143,8 +148,17 @@ export function RagChat() {
                 >
                   {msg.content}
                 </div>
-                {msg.sources && msg.sources.length > 0 && (
-                  <div>
+                <div className="flex items-center gap-2">
+                  {msg.from_rag !== undefined && (
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                      msg.from_rag
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-amber-50 text-amber-700'
+                    }`}>
+                      {msg.from_rag ? '📄 Base documentaire' : '🧠 Connaissance Claude'}
+                    </span>
+                  )}
+                  {msg.sources && msg.sources.length > 0 && (
                     <button
                       onClick={() => toggleSources(idx)}
                       className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
@@ -156,20 +170,36 @@ export function RagChat() {
                       )}
                       {msg.sources.length} source{msg.sources.length > 1 ? 's' : ''}
                     </button>
-                    {expandedSources.has(idx) && (
-                      <ul className="mt-1 space-y-1">
-                        {msg.sources.map((src, sIdx) => (
-                          <li
-                            key={sIdx}
-                            className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-600"
+                  )}
+                </div>
+                {msg.sources && msg.sources.length > 0 && expandedSources.has(idx) && (
+                  <ul className="mt-1 space-y-1">
+                    {msg.sources.map((src, sIdx) => (
+                      <li
+                        key={sIdx}
+                        className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-600"
+                      >
+                        <p className="font-medium text-gray-800">
+                          {src.title || src.description || src.doc_type || src.type || 'Source'}
+                        </p>
+                        {(src.canton || src.city) && (
+                          <p className="mt-0.5 text-gray-400">Canton : {src.canton || src.city}</p>
+                        )}
+                        {src.url ? (
+                          <a
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-0.5 block truncate text-emerald-600 hover:underline font-mono"
                           >
-                            <span className="font-medium">{src.title || src.type}</span>
-                            {src.city && <span className="ml-1 text-gray-400">— {src.city}</span>}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
+                            {src.url}
+                          </a>
+                        ) : src.source ? (
+                          <p className="mt-0.5 text-gray-400 font-mono">{src.source}</p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </div>
@@ -182,7 +212,7 @@ export function RagChat() {
             </div>
             <div className="flex items-center gap-2 rounded-2xl bg-gray-100 px-4 py-3 text-sm text-gray-500">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Analyse en cours…
+              {t('loading')}
             </div>
           </div>
         )}
@@ -198,7 +228,7 @@ export function RagChat() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Posez une question sur la fiscalité FR/CH…"
+            placeholder={t('placeholder')}
             disabled={loading}
             className="flex-1 rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 disabled:opacity-50"
           />

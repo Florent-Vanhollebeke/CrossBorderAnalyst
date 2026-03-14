@@ -117,6 +117,21 @@
       "logout": "Se déconnecter"
     }
   },
+  "advisor": {
+    "title": "Conseiller fiscal IA",
+    "subtitle": "Posez vos questions sur la fiscalité et l'immobilier France / Suisse. Les réponses sont basées sur des données officielles actualisées.",
+    "chat_title": "Conseiller fiscal IA",
+    "chat_subtitle": "Alimenté par les données fiscales officielles CH/FR + Claude",
+    "suggested_title": "Questions suggérées",
+    "suggested_hint": "Cliquez sur une question ou posez la vôtre",
+    "loading": "Analyse en cours…",
+    "placeholder": "Posez une question sur la fiscalité FR/CH…",
+    "error": "Désolé, le conseiller fiscal est temporairement indisponible. Réessayez dans quelques instants.",
+    "suggested_q1": "Quel est le taux d'imposition sur les sociétés à Genève ?",
+    "suggested_q2": "Comparez les charges patronales entre Lyon et Zurich",
+    "suggested_q3": "Quels sont les avantages fiscaux de Bâle pour les entreprises ?",
+    "suggested_q4": "Comment fonctionne l'impôt sur les bénéfices en Suisse ?"
+  },
   "footer": {
     "description": "Plateforme de comparaison fiscale et immobilière France-Suisse.",
     "legal": "Tous droits réservés."

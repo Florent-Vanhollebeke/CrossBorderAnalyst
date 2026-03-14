@@ -200,10 +200,11 @@ def build_index(chunks: List[Chunk]) -> None:
     faiss.write_index(index, str(index_path))
     print(f"[OK] Index sauvegarde: {index_path}")
 
-    # Sauvegarder les metadonnees (format compatible avec build_faiss_index.py)
+    # Sauvegarder les metadonnees en dicts (pas d'instances dataclass pour eviter les pb pickle)
     meta_path = FAISS_INDEX_DIR / "data.pkl"
+    chunk_dicts = [{"id": c.id, "text": c.text, **c.metadata} for c in chunks]
     with open(meta_path, "wb") as f:
-        pickle.dump({"chunks": chunks}, f)
+        pickle.dump({"chunks": chunk_dicts}, f)
     print(f"[OK] Metadonnees sauvegardees: {meta_path}")
 
     # Statistiques
