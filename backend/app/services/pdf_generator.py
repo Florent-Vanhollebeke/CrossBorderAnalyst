@@ -71,7 +71,7 @@ class PDFGenerator:
 
         return bytes(pdf.output())
 
-    def generate_combined_report(self, fiscal_results: list[dict], rent: dict) -> bytes:
+    def generate_combined_report(self, fiscal_results: list[dict], rent: dict, city_rents: dict | None = None) -> bytes:
         """Rapport PDF complet : fiscal + loyer + synthese cout annuel total."""
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -84,7 +84,7 @@ class PDFGenerator:
         pdf.ln(4)
         self._add_rent_section(pdf, rent)
         pdf.ln(4)
-        self._add_total_cost_synthesis(pdf, fiscal_results, rent)
+        self._add_total_cost_synthesis(pdf, fiscal_results, rent, city_rents or {})
         self._add_footer(pdf)
 
         return bytes(pdf.output())
@@ -301,7 +301,7 @@ class PDFGenerator:
     # SECTION SYNTHESE COUT TOTAL (rapport combine)
     # ------------------------------------------
 
-    def _add_total_cost_synthesis(self, pdf: FPDF, fiscal_results: list[dict], rent: dict) -> None:
+    def _add_total_cost_synthesis(self, pdf: FPDF, fiscal_results: list[dict], rent: dict, city_rents: dict) -> None:
         """Synthese : cout total annuel = loyer annuel + cout employeur, par ville."""
         pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*DARK_COLOR)
@@ -309,12 +309,15 @@ class PDFGenerator:
         pdf.ln(1)
         pdf.set_font("Helvetica", "", 8)
         pdf.set_text_color(*GRAY_COLOR)
-        pdf.cell(0, 5, "(Cout employeur annuel + loyer annuel converti en devise locale)",
+        pdf.cell(0, 5, "(Cout employeur annuel + loyer annuel estime par ville)",
                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(3)
 
-        rent_chf_annual = rent.get("predicted_rent_chf", 0) * 12
-        rent_eur_annual = rent.get("predicted_rent_eur", 0) * 12
+        # Loyer de référence (ville simulée) — fallback si city_rents absent
+        fallback_chf = rent.get("predicted_rent_chf", 0)
+        fallback_eur = rent.get("predicted_rent_eur", 0)
+        rent_chf_annual = fallback_chf * 12
+        rent_eur_annual = fallback_eur * 12
 
         label_w = 55
         col_w = (170 - label_w) // max(len(fiscal_results), 1)
@@ -329,16 +332,22 @@ class PDFGenerator:
             pdf.cell(col_w, row_h, f"{r['city']}", fill=True, align="C")
         pdf.ln()
 
+        def _city_rent_annual(r: dict) -> float:
+            """Loyer annuel pour une ville : city_rents si dispo, sinon fallback."""
+            city = r.get("city", "")
+            if r["currency"] == "CHF":
+                return city_rents.get(city, fallback_chf) * 12
+            else:
+                # Lyon (EUR) : pas de modèle suisse → fallback converti
+                return rent_eur_annual
+
         # Loyer annuel row
         pdf.set_fill_color(*LIGHT_GRAY)
         pdf.set_text_color(*DARK_COLOR)
         pdf.set_font("Helvetica", "", 8)
         pdf.cell(label_w, row_h, "Loyer annuel", fill=True)
         for r in fiscal_results:
-            if r["currency"] == "CHF":
-                pdf.cell(col_w, row_h, _fmt(rent_chf_annual, "CHF"), fill=True, align="R")
-            else:
-                pdf.cell(col_w, row_h, _fmt(rent_eur_annual, "EUR"), fill=True, align="R")
+            pdf.cell(col_w, row_h, _fmt(_city_rent_annual(r), r["currency"]), fill=True, align="R")
         pdf.ln()
 
         # Cout employeur row
@@ -354,8 +363,7 @@ class PDFGenerator:
         pdf.set_text_color(*BRAND_COLOR)
         pdf.cell(label_w, row_h, "Total charges annuelles", fill=True)
         for r in fiscal_results:
-            rent_local = rent_chf_annual if r["currency"] == "CHF" else rent_eur_annual
-            total = r["total_employer_cost"] + rent_local
+            total = r["total_employer_cost"] + _city_rent_annual(r)
             pdf.cell(col_w, row_h, _fmt(total, r["currency"]), fill=True, align="R")
         pdf.ln()
 
@@ -364,7 +372,6 @@ class PDFGenerator:
         pdf.set_text_color(255, 255, 255)
         pdf.cell(label_w, row_h, "Resultat net apres loyer", fill=True)
         for r in fiscal_results:
-            rent_local = rent_chf_annual if r["currency"] == "CHF" else rent_eur_annual
-            net_after_rent = r["net_result"] - rent_local
+            net_after_rent = r["net_result"] - _city_rent_annual(r)
             pdf.cell(col_w, row_h, _fmt(net_after_rent, r["currency"]), fill=True, align="R")
         pdf.ln()

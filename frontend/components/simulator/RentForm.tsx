@@ -13,7 +13,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { SwissCantonMap } from './SwissCantonMap';
 
 interface RentFormProps {
-  onResult: (result: PredictRentResponse) => void;
+  onResult: (result: PredictRentResponse, params: RentFormData) => void;
 }
 
 export function RentForm({ onResult }: RentFormProps) {
@@ -53,7 +53,7 @@ export function RentForm({ onResult }: RentFormProps) {
     setError(null);
     try {
       const result = await api.predictRent(data);
-      onResult(result);
+      onResult(result, data);
       // Historique localStorage
       try {
         const entry = {

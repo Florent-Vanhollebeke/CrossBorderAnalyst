@@ -28,7 +28,6 @@ COPY --from=builder /install /usr/local
 
 # Copier le code applicatif
 COPY app/ ./app/
-COPY data/ ./data/
 COPY ml_models/ ./ml_models/
 
 # Utilisateur non-root
@@ -40,4 +39,4 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

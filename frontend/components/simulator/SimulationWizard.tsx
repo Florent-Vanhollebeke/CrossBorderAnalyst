@@ -9,6 +9,7 @@ import { FiscalResults } from '@/components/results/FiscalResults';
 import { RentResults } from '@/components/results/RentResults';
 import { CombinedDownloadButton } from '@/components/results/CombinedDownloadButton';
 import type { CompareFiscalResponse, PredictRentResponse } from '@/lib/api';
+import type { RentFormData } from '@/lib/schemas';
 
 type Tab = 'fiscal' | 'rent';
 type View = 'form' | 'results';
@@ -20,6 +21,7 @@ export function SimulationWizard() {
   const [rentView, setRentView] = useState<View>('form');
   const [fiscalResult, setFiscalResult] = useState<CompareFiscalResponse[] | null>(null);
   const [rentResult, setRentResult] = useState<PredictRentResponse | null>(null);
+  const [rentParams, setRentParams] = useState<RentFormData | null>(null);
 
   const tabs = [
     { key: 'fiscal' as Tab, label: t('tab_fiscal'), icon: Calculator, done: !!fiscalResult },
@@ -31,8 +33,9 @@ export function SimulationWizard() {
     setFiscalView('results');
   };
 
-  const handleRentResult = (result: PredictRentResponse) => {
+  const handleRentResult = (result: PredictRentResponse, params: RentFormData) => {
     setRentResult(result);
+    setRentParams(params);
     setRentView('results');
   };
 
@@ -48,7 +51,7 @@ export function SimulationWizard() {
             <p className="font-semibold text-emerald-800">{t('combined_ready')}</p>
             <p className="text-sm text-emerald-600">{t('combined_ready_sub')}</p>
           </div>
-          <CombinedDownloadButton fiscalResults={fiscalResult} rentResult={rentResult} />
+          <CombinedDownloadButton fiscalResults={fiscalResult} rentResult={rentResult} rentParams={rentParams} />
         </div>
       )}
 

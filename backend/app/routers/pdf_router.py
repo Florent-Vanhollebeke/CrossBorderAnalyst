@@ -65,6 +65,7 @@ class RentResultItem(BaseModel):
 class CombinedReportRequest(BaseModel):
     fiscal: list[FiscalResultItem]
     rent: RentResultItem
+    city_rents: dict[str, float] = {}  # city -> loyer mensuel CHF
 
 
 # ============================================
@@ -113,6 +114,7 @@ async def generate_combined_pdf(body: CombinedReportRequest):
         pdf_bytes = _generator.generate_combined_report(
             [r.model_dump() for r in body.fiscal],
             body.rent.model_dump(),
+            body.city_rents,
         )
     except Exception as exc:
         logger.error(f"Erreur PDF combiné : {exc}", exc_info=True)
