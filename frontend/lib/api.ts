@@ -32,10 +32,18 @@ export const LYON_RENT_EUR_PER_M2_YEAR: Record<LyonZone, number> = {
   secondaire: 140,  // Zones secondaires
 };
 
+// Labels pour l'UI (caractères Unicode autorisés)
 export const LYON_ZONE_LABELS: Record<LyonZone, string> = {
   centre:     "Centre premium (Part-Dieu / Presqu'île) — 250 €/m²/an",
   periph:     'Périphérie proche (Villeurbanne / Gerland) — 180 €/m²/an',
   secondaire: 'Zone secondaire — 140 €/m²/an',
+};
+
+// Labels PDF-safe : Latin-1 uniquement (pas de — ni €)
+const LYON_ZONE_LABELS_PDF: Record<LyonZone, string> = {
+  centre:     "Centre premium (Part-Dieu / Presqu'île) - 250 EUR/m2/an",
+  periph:     'Périphérie proche (Villeurbanne / Gerland) - 180 EUR/m2/an',
+  secondaire: 'Zone secondaire - 140 EUR/m2/an',
 };
 
 const CHF_TO_EUR = 1.064;
@@ -61,7 +69,7 @@ export function buildLyonRentResponse(
     model_info: {
       model_type: 'Estimation marché (hors modèle ML)',
       r2_score: -1,
-      training_data: `Bureauxlocaux 2024, JLL Lyon 3 2025 — ${LYON_ZONE_LABELS[zone]}`,
+      training_data: `Bureauxlocaux 2024, JLL Lyon 3 2025 - ${LYON_ZONE_LABELS_PDF[zone]}`,
       last_updated: '2026',
     },
   };
