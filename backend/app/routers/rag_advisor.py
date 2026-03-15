@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 
 from services.rag_fiscal import RAGService
+from services.brave_search import BraveSearchService
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,11 @@ class RAGResponse(BaseModel):
     answer: str
     sources: List[Dict[str, Any]]
     from_rag: bool = False
+
+
+@router.get("/brave-usage")
+async def brave_usage():
+    return BraveSearchService().get_usage()
 
 
 @router.post("/ask", response_model=RAGResponse)

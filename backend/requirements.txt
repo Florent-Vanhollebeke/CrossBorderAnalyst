@@ -28,6 +28,7 @@ scipy
 # ============================================
 python-dateutil
 typing-extensions
+python-dotenv>=1.0.0
 
 # ============================================
 # RAG / LLM

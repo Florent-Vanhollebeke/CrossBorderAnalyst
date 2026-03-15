@@ -187,7 +187,7 @@ def build_index(chunks: List[Chunk]) -> None:
     # Generer les embeddings
     print(f"[EMB] Generation des embeddings pour {len(chunks)} chunks...")
     texts = [c.text for c in chunks]
-    embeddings = model.encode(texts, show_progress_bar=True)
+    embeddings = model.encode(texts, show_progress_bar=True, normalize_embeddings=True)
 
     # Creer l'index FAISS
     print(f"[FAISS] Creation de l'index FAISS...")

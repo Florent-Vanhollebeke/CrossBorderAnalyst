@@ -26,9 +26,24 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? '';
+
 export default async function middleware(request: NextRequest) {
   const response = intlMiddleware(request);
-  const sessionResponse = await updateSession(request, response);
+  const { response: sessionResponse, user } = await updateSession(request, response);
+
+  const isAdminRoute = /\/(fr|en|de)\/admin(\/|$)/.test(request.nextUrl.pathname);
+  if (isAdminRoute) {
+    if (!user) {
+      const loginUrl = new URL(`/${request.nextUrl.locale ?? 'fr'}/auth/login`, request.url);
+      loginUrl.searchParams.set('next', request.nextUrl.pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (user.email !== ADMIN_EMAIL) {
+      return NextResponse.redirect(new URL(`/${request.nextUrl.locale ?? 'fr'}`, request.url));
+    }
+  }
+
   return applySecurityHeaders(sessionResponse);
 }
 

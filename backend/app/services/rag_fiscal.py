@@ -12,6 +12,11 @@ from services.brave_search import BraveSearchService
 
 logger = logging.getLogger(__name__)
 
+RAG_DISTANCE_THRESHOLD = 0.65  # En dessous → RAG suffit ; au dessus → Brave appelé
+# Embeddings normalisés (L2 dans [0,2]). Calibré sur l'index réel :
+#   IN corpus  : TVA→0.53, impôt bénéfices→0.61  (< 0.65 ✓)
+#   OUT corpus : BNS→0.68, taux hypothécaire→0.70 (> 0.65 ✓)
+
 
 @dataclass
 class _Chunk:
@@ -85,7 +90,7 @@ class RAGService:
         if not self.index or not self.chunks:
             return []
 
-        query_embedding = self.model.encode([query])
+        query_embedding = self.model.encode([query], normalize_embeddings=True)
         distances, indices = self.index.search(query_embedding, top_k * 5)
 
         results = []
@@ -110,7 +115,15 @@ class RAGService:
 
     def ask(self, question: str, filters: Optional[Dict] = None) -> Tuple[str, List[Dict], bool]:
         rag_sources = self.search(question, top_k=3, filters=filters)
-        web_sources = self.brave.search(question, count=2)
+
+        rag_is_sufficient = bool(rag_sources) and min(
+            s["distance"] for s in rag_sources
+        ) < RAG_DISTANCE_THRESHOLD
+
+        if rag_is_sufficient:
+            web_sources = []
+        else:
+            web_sources = self.brave.search(question, count=2)
 
         all_sources = rag_sources + web_sources
 
@@ -130,7 +143,7 @@ class RAGService:
             )
         for i, s in enumerate(web_sources):
             context_parts.append(
-                f"[Web {i+1}: {s.get('title', 'Résultat web')} — {s.get('url', '')}]\n{s.get('text', '')}"
+                f"[Source web — {s.get('title', 'Résultat web')}]\n{s.get('text', '')}"
             )
         context = "\n\n".join(context_parts)
 
@@ -142,6 +155,9 @@ class RAGService:
             "Si les sources ne couvrent pas completement la question, completez avec vos "
             "connaissances generales en fiscalite franco-suisse en le signalant clairement "
             "avec la mention '(connaissance generale)'.\n\n"
+            "CONSIGNES DE FORME : repondez en texte brut uniquement. "
+            "N'utilisez PAS de balises HTML (<strong>, <em>, etc.). "
+            "Utilisez des tirets (-) pour les listes et des majuscules pour les titres.\n\n"
             f"SOURCES:\n{context}\n\n"
             f"QUESTION:\n{question}\n\n"
             "Repondez de maniere claire et structuree, en citant les chiffres precis quand disponibles."
@@ -154,7 +170,7 @@ class RAGService:
                 "Le service de reponse IA n'est pas configure. "
                 "Voici les sources pertinentes trouvees.",
                 all_sources,
-                True,
+                rag_is_sufficient,
             )
 
         try:
@@ -172,7 +188,7 @@ class RAGService:
                 "Le service de reponse IA est temporairement indisponible. "
                 "Voici les sources pertinentes trouvees.",
                 all_sources,
-                True,
+                rag_is_sufficient,
             )
 
-        return answer, all_sources, True
+        return answer, all_sources, rag_is_sufficient

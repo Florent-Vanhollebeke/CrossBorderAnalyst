@@ -3,6 +3,10 @@
 # backend/app/main.py
 # ============================================
 
+from dotenv import load_dotenv
+from pathlib import Path
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")  # charge SwissRelocator/.env en dev local
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
