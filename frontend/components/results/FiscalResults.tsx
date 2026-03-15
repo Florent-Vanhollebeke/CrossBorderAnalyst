@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import { ArrowLeft, TrendingUp, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { FiscalChart } from './FiscalChart';
 import { DownloadPDFButton } from './DownloadPDFButton';
 import type { CompareFiscalResponse } from '@/lib/api';
 import { formatCHF, formatEUR } from '@/lib/api';
+import { localizeCity } from '@/lib/cities';
 
 interface FiscalResultsProps {
   results: CompareFiscalResponse[];
@@ -24,6 +26,7 @@ function pct(rate: number): string {
 
 export function FiscalResults({ results, onBack }: FiscalResultsProps) {
   const t = useTranslations('results');
+  const { locale } = useParams<{ locale: string }>();
 
   const lyon = results.find(r => r.country === 'FR');
   const swiss = results.filter(r => r.country === 'CH');
@@ -51,7 +54,7 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
         <div className="grid gap-4 sm:grid-cols-3">
           <Card>
             <CardContent className="pt-6 text-center">
-              <p className="text-sm text-gray-500">{t('fiscal.net_result')} Lyon</p>
+              <p className="text-sm text-gray-500">{t('fiscal.net_result')} {localizeCity('Lyon', locale)}</p>
               <p className="mt-1 text-2xl font-bold text-gray-900">
                 {formatAmount(lyon.net_result, lyon.currency)}
               </p>
@@ -59,7 +62,7 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
           </Card>
           <Card>
             <CardContent className="pt-6 text-center">
-              <p className="text-sm text-gray-500">{t('fiscal.net_result')} {bestSwiss.city}</p>
+              <p className="text-sm text-gray-500">{t('fiscal.net_result')} {localizeCity(bestSwiss.city, locale)}</p>
               <p className="mt-1 text-2xl font-bold text-emerald-600">
                 {formatAmount(bestSwiss.net_result, bestSwiss.currency)}
               </p>
@@ -97,7 +100,7 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
                 <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-500" />
                 {results.map((r) => (
                   <th key={r.city} className="px-3 sm:px-6 py-3 text-right font-medium text-gray-700 whitespace-nowrap">
-                    {r.city} ({r.currency})
+                    {localizeCity(r.city, locale)} ({r.currency})
                   </th>
                 ))}
               </tr>

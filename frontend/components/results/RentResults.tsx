@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import { ArrowLeft, Home, TrendingUp, Info, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PredictRentResponse } from '@/lib/api';
 import { formatCHF, formatEUR } from '@/lib/api';
+import { localizeCity } from '@/lib/cities';
 
 interface RentResultsProps {
   result: PredictRentResponse;
@@ -15,6 +17,7 @@ interface RentResultsProps {
 
 export function RentResults({ result, onBack }: RentResultsProps) {
   const t = useTranslations('results');
+  const { locale } = useParams<{ locale: string }>();
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
@@ -95,7 +98,7 @@ export function RentResults({ result, onBack }: RentResultsProps) {
               {formatCHF(result.price_per_m2_chf)}/m2
             </p>
             <p className="mt-1 text-sm text-gray-500">
-              {result.city} &middot; {result.surface} m2
+              {localizeCity(result.city, locale)} &middot; {result.surface} m²
             </p>
           </CardContent>
         </Card>

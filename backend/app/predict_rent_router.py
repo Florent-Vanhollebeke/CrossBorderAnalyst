@@ -268,7 +268,7 @@ async def predict_rent(request: PredictRentRequest):
     """
     Predit le loyer mensuel d'un bien immobilier commercial en Suisse.
 
-    Le modele est entraine sur des donnees ImmoScout24 (bureaux, commerces).
+    Le modele est entraine sur 1 200+ annonces commerciales suisses (bureaux, commerces).
 
     **Villes supportees:** Geneve, Lausanne, Zurich, Basel
 
@@ -312,7 +312,7 @@ async def predict_rent(request: PredictRentRequest):
             model_info={
                 "model_type": "XGBoost Regressor",
                 "r2_score": 0.763,
-                "training_data": "ImmoScout24 Suisse",
+                "training_data": "1 200+ annonces commerciales suisses",
                 "last_updated": "2025-12"
             }
         )

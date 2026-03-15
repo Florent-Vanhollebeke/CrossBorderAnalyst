@@ -1,16 +1,19 @@
 'use client';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CompareFiscalResponse } from '@/lib/api';
+import { localizeCity } from '@/lib/cities';
 
 interface FiscalChartProps {
   results: CompareFiscalResponse[];
 }
 
 export function FiscalChart({ results }: FiscalChartProps) {
+  const { locale } = useParams<{ locale: string }>();
   const data = results.map((r) => ({
-    name: `${r.city} (${r.currency})`,
+    name: `${localizeCity(r.city, locale)} (${r.currency})`,
     'IS': Math.round(r.corporate_tax_amount),
     'Charges patronales': Math.round(r.employer_social_charges_amount),
     'Resultat net': Math.round(r.net_result),
