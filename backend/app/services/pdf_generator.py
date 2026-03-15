@@ -100,7 +100,7 @@ class PDFGenerator:
         pdf.set_y(8)
         pdf.set_font("Helvetica", "B", 18)
         pdf.set_text_color(255, 255, 255)
-        pdf.cell(0, 10, "SwissRelocator", align="L")
+        pdf.cell(0, 10, "CrossBorder Analyst", align="L")
 
         pdf.set_font("Helvetica", "", 10)
         pdf.set_text_color(220, 252, 231)
@@ -122,7 +122,7 @@ class PDFGenerator:
         pdf.set_text_color(*GRAY_COLOR)
         pdf.multi_cell(
             0, 4,
-            "Rapport genere par SwissRelocator - Donnees indicatives uniquement. "
+            "Rapport genere par CrossBorder Analyst - Donnees indicatives uniquement. "
             "Les taux fiscaux peuvent evoluer. Consultez un expert-comptable pour toute decision.",
             align="C",
         )

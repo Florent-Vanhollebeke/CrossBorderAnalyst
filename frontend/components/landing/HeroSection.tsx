@@ -65,7 +65,7 @@ export function HeroSection() {
         >
           {[
             { value: '4', label: locale === 'fr' ? 'Cantons suisses' : 'Swiss cantons' },
-            { value: '2000+', label: locale === 'fr' ? 'Donnees immobilieres' : 'Property listings' },
+            { value: '1 200+', label: locale === 'fr' ? 'Annonces immobilières' : 'Property listings' },
             { value: '76%', label: locale === 'fr' ? 'Precision ML' : 'ML accuracy' },
           ].map((stat) => (
             <div key={stat.label}>

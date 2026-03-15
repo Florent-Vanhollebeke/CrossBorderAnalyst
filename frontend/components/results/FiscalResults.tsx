@@ -91,12 +91,12 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
           <CardTitle>{t('fiscal.title')}</CardTitle>
         </CardHeader>
         <CardContent className="overflow-x-auto p-0">
-          <table className="w-full text-sm">
+          <table className="min-w-max w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="px-6 py-3 text-left font-medium text-gray-500" />
+                <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-500" />
                 {results.map((r) => (
-                  <th key={r.city} className="px-6 py-3 text-right font-medium text-gray-700">
+                  <th key={r.city} className="px-3 sm:px-6 py-3 text-right font-medium text-gray-700 whitespace-nowrap">
                     {r.city} ({r.currency})
                   </th>
                 ))}
@@ -104,9 +104,9 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
             </thead>
             <tbody className="divide-y divide-gray-100">
               <tr>
-                <td className="px-6 py-3 font-medium text-gray-700">{t('fiscal.corporate_tax')}</td>
+                <td className="px-3 sm:px-6 py-3 font-medium text-gray-700 whitespace-nowrap">{t('fiscal.corporate_tax')}</td>
                 {results.map((r) => (
-                  <td key={r.city} className="px-6 py-3 text-right">
+                  <td key={r.city} className="px-3 sm:px-6 py-3 text-right">
                     <span className="text-gray-500">{pct(r.corporate_tax_rate)}</span>
                     <br />
                     <span className="font-medium">{formatAmount(r.corporate_tax_amount, r.currency)}</span>
@@ -114,9 +114,9 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
                 ))}
               </tr>
               <tr>
-                <td className="px-6 py-3 font-medium text-gray-700">{t('fiscal.employer_charges')}</td>
+                <td className="px-3 sm:px-6 py-3 font-medium text-gray-700 whitespace-nowrap">{t('fiscal.employer_charges')}</td>
                 {results.map((r) => (
-                  <td key={r.city} className="px-6 py-3 text-right">
+                  <td key={r.city} className="px-3 sm:px-6 py-3 text-right">
                     <span className="text-gray-500">{pct(r.employer_social_charges_rate)}</span>
                     <br />
                     <span className="font-medium">{formatAmount(r.employer_social_charges_amount, r.currency)}</span>
@@ -124,17 +124,17 @@ export function FiscalResults({ results, onBack }: FiscalResultsProps) {
                 ))}
               </tr>
               <tr>
-                <td className="px-6 py-3 font-medium text-gray-700">{t('fiscal.total_employer_cost')}</td>
+                <td className="px-3 sm:px-6 py-3 font-medium text-gray-700 whitespace-nowrap">{t('fiscal.total_employer_cost')}</td>
                 {results.map((r) => (
-                  <td key={r.city} className="px-6 py-3 text-right font-medium">
+                  <td key={r.city} className="px-3 sm:px-6 py-3 text-right font-medium">
                     {formatAmount(r.total_employer_cost, r.currency)}
                   </td>
                 ))}
               </tr>
               <tr className="bg-gray-50 font-semibold">
-                <td className="px-6 py-3 text-gray-900">{t('fiscal.net_result')}</td>
+                <td className="px-3 sm:px-6 py-3 text-gray-900 whitespace-nowrap">{t('fiscal.net_result')}</td>
                 {results.map((r) => (
-                  <td key={r.city} className={`px-6 py-3 text-right ${r.net_result >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
+                  <td key={r.city} className={`px-3 sm:px-6 py-3 text-right ${r.net_result >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
                     {formatAmount(r.net_result, r.currency)}
                   </td>
                 ))}

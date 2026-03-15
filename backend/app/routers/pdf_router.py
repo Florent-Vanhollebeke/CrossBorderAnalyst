@@ -93,7 +93,7 @@ async def generate_fiscal_pdf(results: list[FiscalResultItem]):
     except Exception as exc:
         logger.error(f"Erreur PDF fiscal : {exc}", exc_info=True)
         raise PDFGenerationError()
-    return _pdf_response(pdf_bytes, "swissrelocator_rapport_fiscal.pdf")
+    return _pdf_response(pdf_bytes, "crossborderanalyst_rapport_fiscal.pdf")
 
 
 @router.post("/generate-pdf/rent", summary="Rapport PDF estimation de loyer")
@@ -103,7 +103,7 @@ async def generate_rent_pdf(rent: RentResultItem):
     except Exception as exc:
         logger.error(f"Erreur PDF loyer : {exc}", exc_info=True)
         raise PDFGenerationError()
-    return _pdf_response(pdf_bytes, "swissrelocator_rapport_loyer.pdf")
+    return _pdf_response(pdf_bytes, "crossborderanalyst_rapport_loyer.pdf")
 
 
 @router.post("/generate-pdf/combined", summary="Rapport PDF analyse complète fiscal + loyer")
@@ -119,4 +119,4 @@ async def generate_combined_pdf(body: CombinedReportRequest):
     except Exception as exc:
         logger.error(f"Erreur PDF combiné : {exc}", exc_info=True)
         raise PDFGenerationError()
-    return _pdf_response(pdf_bytes, "swissrelocator_analyse_complete.pdf")
+    return _pdf_response(pdf_bytes, "crossborderanalyst_analyse_complete.pdf")
