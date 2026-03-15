@@ -312,7 +312,7 @@ async def predict_rent(request: PredictRentRequest):
             model_info={
                 "model_type": "XGBoost Regressor",
                 "r2_score": 0.763,
-                "training_data": "1 200+ annonces commerciales suisses",
+                "training_data": "Données immobilières suisses",
                 "last_updated": "2025-12"
             }
         )
