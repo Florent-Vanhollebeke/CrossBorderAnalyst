@@ -4,9 +4,12 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MapPin } from 'lucide-react';
 import { rentSchema, type RentFormData } from '@/lib/schemas';
-import { api, type PredictRentResponse, type ApiError, type SupportedCity } from '@/lib/api';
+import {
+  api, type PredictRentResponse, type ApiError, type SupportedCity,
+  type LyonZone, LYON_ZONE_LABELS, buildLyonRentResponse,
+} from '@/lib/api';
 import { saveSimulation } from '@/lib/simulations';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -38,10 +41,13 @@ export function RentForm({ onResult }: RentFormProps) {
       property_type: 'bureau',
       has_parking: false,
       has_lift: true,
+      lyon_zone: 'centre',
     },
   });
 
   const selectedCity = watch('city');
+  const selectedLyonZone = watch('lyon_zone');
+  const isLyon = selectedCity === 'Lyon';
 
   const handleCantonSelect = ({ city, lat, lng }: { city: SupportedCity; lat: number; lng: number }) => {
     setValue('city', city, { shouldValidate: true });
@@ -49,19 +55,28 @@ export function RentForm({ onResult }: RentFormProps) {
     setValue('longitude', lng);
   };
 
+  const selectLyon = () => {
+    setValue('city', 'Lyon', { shouldValidate: true });
+    setValue('latitude', undefined);
+    setValue('longitude', undefined);
+  };
+
   const onSubmit = async (data: RentFormData) => {
     setLoading(true);
     setError(null);
     try {
-      const result = await api.predictRent(data);
+      let result: PredictRentResponse;
+      if (data.city === 'Lyon') {
+        result = buildLyonRentResponse(data.surface, (data.lyon_zone ?? 'centre') as LyonZone);
+      } else {
+        result = await api.predictRent(data);
+      }
       onResult(result, data);
-      // Historique Supabase (avec fallback localStorage)
       try {
-        await saveSimulation({
-          type: 'rent',
-          label: `${data.city} — ${data.surface} m² — ${result.predicted_rent_chf.toLocaleString()} CHF/mois`,
-          params: data as Record<string, unknown>,
-        });
+        const label = data.city === 'Lyon'
+          ? `Lyon — ${data.surface} m² — ${result.predicted_rent_eur.toLocaleString()} EUR/mois (estimation marché)`
+          : `${data.city} — ${data.surface} m² — ${result.predicted_rent_chf.toLocaleString()} CHF/mois`;
+        await saveSimulation({ type: 'rent', label, params: data as Record<string, unknown> });
       } catch { /* historique non critique */ }
     } catch (err) {
       const apiErr = err as ApiError;
@@ -76,15 +91,56 @@ export function RentForm({ onResult }: RentFormProps) {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
-          {/* Canton map selector */}
-          <div className="space-y-1">
+          {/* City selector: Swiss map + Lyon button */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               {t('city')}
             </label>
-            <SwissCantonMap
-              selected={selectedCity}
-              onSelect={handleCantonSelect}
-            />
+
+            {/* Swiss canton map — hidden when Lyon selected */}
+            {!isLyon && (
+              <SwissCantonMap
+                selected={selectedCity as SupportedCity}
+                onSelect={handleCantonSelect}
+              />
+            )}
+
+            {/* Lyon button */}
+            <button
+              type="button"
+              onClick={isLyon ? () => handleCantonSelect({ city: 'Geneve', lat: 46.2044, lng: 6.1432 }) : selectLyon}
+              className={`flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors ${
+                isLyon
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
+              }`}
+            >
+              <MapPin className="h-4 w-4" />
+              {isLyon ? '✓ Lyon (France) sélectionné — cliquer pour revenir à la carte suisse' : 'Simuler sur Lyon (France)'}
+            </button>
+
+            {/* Zone selector — only for Lyon */}
+            {isLyon && (
+              <div className="rounded-lg border border-blue-100 bg-blue-50 p-3 space-y-2">
+                <p className="text-xs font-medium text-blue-700">Zone de bureaux à Lyon (estimation marché 2026)</p>
+                <div className="space-y-1.5">
+                  {(Object.entries(LYON_ZONE_LABELS) as [LyonZone, string][]).map(([zone, label]) => (
+                    <label key={zone} className="flex items-start gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value={zone}
+                        checked={selectedLyonZone === zone}
+                        onChange={() => setValue('lyon_zone', zone)}
+                        className="mt-0.5 text-blue-600"
+                      />
+                      <span className="text-xs text-gray-700">{label}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-blue-500">Source : Bureauxlocaux 2024, JLL Lyon 3 2025 — projection 2026</p>
+              </div>
+            )}
+
             {errors.city && (
               <p className="text-xs text-red-600">{errors.city.message}</p>
             )}

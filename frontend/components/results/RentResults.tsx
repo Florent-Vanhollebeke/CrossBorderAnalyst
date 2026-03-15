@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Home, TrendingUp, Info, FileDown } from 'lucide-react';
+import { ArrowLeft, Home, TrendingUp, Info, FileDown, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PredictRentResponse } from '@/lib/api';
@@ -20,6 +20,7 @@ export function RentResults({ result, onBack }: RentResultsProps) {
   const { locale } = useParams<{ locale: string }>();
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const isLyon = result.city === 'Lyon';
 
   async function handleDownloadPdf() {
     setPdfLoading(true);
@@ -72,17 +73,32 @@ export function RentResults({ result, onBack }: RentResultsProps) {
       </div>
 
       {/* Main KPI */}
-      <Card className="border-brand-200 bg-brand-50">
+      <Card className={isLyon ? 'border-blue-200 bg-blue-50' : 'border-brand-200 bg-brand-50'}>
         <CardContent className="pt-6 text-center">
-          <Home className="mx-auto h-8 w-8 text-brand-600" />
+          {isLyon ? <MapPin className="mx-auto h-8 w-8 text-blue-600" /> : <Home className="mx-auto h-8 w-8 text-brand-600" />}
+          {isLyon && (
+            <span className="mt-2 inline-block rounded-full bg-blue-100 px-3 py-0.5 text-xs font-medium text-blue-700">
+              Estimation marché — données 2024‑2025
+            </span>
+          )}
           <p className="mt-2 text-sm text-gray-600">{t('rent.predicted_rent')}</p>
-          <p className="mt-1 text-4xl font-bold text-brand-800">
-            {formatCHF(result.predicted_rent_chf)}
-            <span className="text-lg font-normal text-gray-500"> /mois</span>
-          </p>
-          <p className="mt-1 text-sm text-gray-500">
-            ~ {formatEUR(result.predicted_rent_eur)}
-          </p>
+          {isLyon ? (
+            <>
+              <p className="mt-1 text-4xl font-bold text-blue-800">
+                {formatEUR(result.predicted_rent_eur)}
+                <span className="text-lg font-normal text-gray-500"> /mois</span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">~ {formatCHF(result.predicted_rent_chf)}</p>
+            </>
+          ) : (
+            <>
+              <p className="mt-1 text-4xl font-bold text-brand-800">
+                {formatCHF(result.predicted_rent_chf)}
+                <span className="text-lg font-normal text-gray-500"> /mois</span>
+              </p>
+              <p className="mt-1 text-sm text-gray-500">~ {formatEUR(result.predicted_rent_eur)}</p>
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -151,10 +167,12 @@ export function RentResults({ result, onBack }: RentResultsProps) {
               <dt className="text-gray-500">{t('rent.model_type')}</dt>
               <dd className="font-medium text-gray-900">{result.model_info.model_type}</dd>
             </div>
-            <div>
-              <dt className="text-gray-500">{t('rent.r2_score')}</dt>
-              <dd className="font-medium text-gray-900">{(result.model_info.r2_score * 100).toFixed(1)}%</dd>
-            </div>
+            {!isLyon && (
+              <div>
+                <dt className="text-gray-500">{t('rent.r2_score')}</dt>
+                <dd className="font-medium text-gray-900">{(result.model_info.r2_score * 100).toFixed(1)}%</dd>
+              </div>
+            )}
             <div>
               <dt className="text-gray-500">{t('rent.training_data')}</dt>
               <dd className="font-medium text-gray-900">{result.model_info.training_data}</dd>

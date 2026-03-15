@@ -21,9 +21,14 @@ BLUE_COLOR  = (59, 130, 246)   # blue-500
 
 CHF_TO_EUR  = 1.064
 
-# Loyer Lyon Part-Dieu - estimation marché 2026 (hors modèle ML)
+# Loyer Lyon - estimation marché 2026 par zone (hors modèle ML)
 # Source : Bureauxlocaux 2024, JLL Lyon 3 2025, projection hausse modérée
-LYON_RENT_EUR_PER_M2_YEAR = 250.0
+LYON_RENT_EUR_PER_M2_YEAR_BY_ZONE: dict[str, float] = {
+    "centre":     250.0,  # Part-Dieu / Presqu'île
+    "periph":     180.0,  # Villeurbanne / Gerland
+    "secondaire": 140.0,  # Zones secondaires
+}
+LYON_RENT_EUR_PER_M2_YEAR = 250.0  # fallback
 
 # Noms de villes en français
 CITY_FR = {
@@ -88,7 +93,7 @@ class PDFGenerator:
 
         return bytes(pdf.output())
 
-    def generate_combined_report(self, fiscal_results: list[dict], rent: dict, city_rents: dict | None = None) -> bytes:
+    def generate_combined_report(self, fiscal_results: list[dict], rent: dict, city_rents: dict | None = None, lyon_zone: str = "centre") -> bytes:
         """Rapport PDF complet : fiscal + loyer + synthèse coût annuel total."""
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -101,7 +106,7 @@ class PDFGenerator:
         pdf.ln(4)
         self._add_rent_section(pdf, rent)
         pdf.ln(4)
-        self._add_total_cost_synthesis(pdf, fiscal_results, rent, city_rents or {})
+        self._add_total_cost_synthesis(pdf, fiscal_results, rent, city_rents or {}, lyon_zone=lyon_zone)
         self._add_footer(pdf)
 
         return bytes(pdf.output())
@@ -318,7 +323,7 @@ class PDFGenerator:
     # SECTION SYNTHÈSE COÛT TOTAL (rapport combiné)
     # ------------------------------------------
 
-    def _add_total_cost_synthesis(self, pdf: FPDF, fiscal_results: list[dict], rent: dict, city_rents: dict) -> None:
+    def _add_total_cost_synthesis(self, pdf: FPDF, fiscal_results: list[dict], rent: dict, city_rents: dict, lyon_zone: str = "centre") -> None:
         """Synthèse : coût total annuel = loyer annuel + coût employeur, par ville."""
         pdf.set_font("Helvetica", "B", 12)
         pdf.set_text_color(*DARK_COLOR)
@@ -330,8 +335,9 @@ class PDFGenerator:
                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(3)
 
-        # Loyer Lyon : estimation marché 250 EUR/m²/an (projection 2026, hors modèle ML)
+        # Loyer Lyon : estimation marché par zone (projection 2026, hors modèle ML)
         surface = rent.get("surface", 300)
+        lyon_rate = LYON_RENT_EUR_PER_M2_YEAR_BY_ZONE.get(lyon_zone, LYON_RENT_EUR_PER_M2_YEAR)
         fallback_chf = rent.get("predicted_rent_chf", 0)
 
         label_w = 55
@@ -350,7 +356,7 @@ class PDFGenerator:
         def _city_rent_annual(r: dict) -> float:
             """Loyer annuel par ville. Lyon = marché 250 EUR/m2/an. CH = modèle ML."""
             if r["currency"] == "EUR":
-                return surface * LYON_RENT_EUR_PER_M2_YEAR
+                return surface * lyon_rate
             return (city_rents.get(r.get("city", "")) or fallback_chf) * 12
 
         # Loyer annuel row - flag (*) sur Lyon pour signaler estimation marché
@@ -412,9 +418,15 @@ class PDFGenerator:
         pdf.ln(2)
         pdf.set_font("Helvetica", "I", 6)
         pdf.set_text_color(*GRAY_COLOR)
+        zone_labels = {
+            "centre":     "Centre premium (Part-Dieu / Presqu'île) - 250 EUR/m2/an",
+            "periph":     "Périphérie proche (Villeurbanne / Gerland) - 180 EUR/m2/an",
+            "secondaire": "Zone secondaire - 140 EUR/m2/an",
+        }
+        zone_label = zone_labels.get(lyon_zone, zone_labels["centre"])
         pdf.multi_cell(
             0, 4,
-            "* Lyon (2026) - Estimation marché : 250 EUR/m2/an, bureaux standard Part-Dieu. "
+            f"* Lyon (2026) - Estimation marché : {zone_label}. "
             "Source : Bureauxlocaux 2024, JLL Lyon 3 2025 - projection 2026 hausse modérée. "
             "Hors modèle ML (modèle disponible uniquement pour les villes suisses).",
             align="L",

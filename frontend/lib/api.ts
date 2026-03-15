@@ -23,6 +23,49 @@ const HTTP_ERROR_MESSAGES: Record<number, string> = {
 // ============================================
 
 export type SupportedCity = 'Geneve' | 'Lausanne' | 'Zurich' | 'Basel';
+
+export type LyonZone = 'centre' | 'periph' | 'secondaire';
+
+export const LYON_RENT_EUR_PER_M2_YEAR: Record<LyonZone, number> = {
+  centre:     250,  // Part-Dieu / Presqu'île
+  periph:     180,  // Villeurbanne / Gerland
+  secondaire: 140,  // Zones secondaires
+};
+
+export const LYON_ZONE_LABELS: Record<LyonZone, string> = {
+  centre:     "Centre premium (Part-Dieu / Presqu'île) — 250 €/m²/an",
+  periph:     'Périphérie proche (Villeurbanne / Gerland) — 180 €/m²/an',
+  secondaire: 'Zone secondaire — 140 €/m²/an',
+};
+
+const CHF_TO_EUR = 1.064;
+
+export function buildLyonRentResponse(
+  surface: number,
+  zone: LyonZone,
+): PredictRentResponse {
+  const ratePerM2PerYear = LYON_RENT_EUR_PER_M2_YEAR[zone];
+  const monthlyEUR = (surface * ratePerM2PerYear) / 12;
+  const monthlyCHF = monthlyEUR / CHF_TO_EUR;
+  return {
+    predicted_rent_chf: monthlyCHF,
+    predicted_rent_eur: monthlyEUR,
+    price_per_m2_chf: ratePerM2PerYear / CHF_TO_EUR,
+    confidence_range: {
+      min_chf: monthlyCHF * 0.88,
+      max_chf: monthlyCHF * 1.12,
+      mae_chf: monthlyCHF * 0.12,
+    },
+    city: 'Lyon',
+    surface,
+    model_info: {
+      model_type: 'Estimation marché (hors modèle ML)',
+      r2_score: -1,
+      training_data: `Bureauxlocaux 2024, JLL Lyon 3 2025 — ${LYON_ZONE_LABELS[zone]}`,
+      last_updated: '2026',
+    },
+  };
+}
 export type PropertyType = 'bureau' | 'commercial';
 
 export interface PredictRentRequest {

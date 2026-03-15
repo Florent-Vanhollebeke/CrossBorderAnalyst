@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FileDown } from 'lucide-react';
 import { api } from '@/lib/api';
-import type { CompareFiscalResponse, PredictRentResponse, SupportedCity } from '@/lib/api';
+import type { CompareFiscalResponse, PredictRentResponse, SupportedCity, LyonZone } from '@/lib/api';
 import type { RentFormData } from '@/lib/schemas';
 
 // Coordonnées par défaut pour chaque ville (même valeurs que SwissCantonMap)
@@ -52,11 +52,12 @@ export function CombinedDownloadButton({ fiscalResults, rentResult, rentParams }
         );
       }
 
+      const lyonZone: LyonZone = (rentParams?.lyon_zone as LyonZone) ?? 'centre';
       const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
       const resp = await fetch(`${apiUrl}/api/v1/generate-pdf/combined`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fiscal: fiscalResults, rent: rentResult, city_rents: cityRents }),
+        body: JSON.stringify({ fiscal: fiscalResults, rent: rentResult, city_rents: cityRents, lyon_zone: lyonZone }),
       });
       if (!resp.ok) throw new Error(`${resp.status}`);
       const blob = await resp.blob();

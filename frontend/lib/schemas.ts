@@ -19,16 +19,16 @@ export const fiscalSchema = z.object({
 export type FiscalFormData = z.infer<typeof fiscalSchema>;
 
 export const rentSchema = z.object({
-  city: z.enum(['Geneve', 'Lausanne', 'Zurich', 'Basel']),
-  // Coordonnées restreintes au territoire suisse
-  latitude: z.number().min(45.5).max(48.0).optional(),
-  longitude: z.number().min(5.5).max(10.5).optional(),
+  city: z.enum(['Geneve', 'Lausanne', 'Zurich', 'Basel', 'Lyon']),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   surface: z.number().min(5).max(10000),
   pieces: z.number().int().min(1).max(50).optional(),
   etage: z.number().int().min(-5).max(50).optional(),
   has_parking: z.boolean().default(false),
   has_lift: z.boolean().default(false),
   property_type: z.enum(['bureau', 'commercial']).default('bureau'),
+  lyon_zone: z.enum(['centre', 'periph', 'secondaire']).optional(),
 });
 
 export type RentFormData = z.infer<typeof rentSchema>;
