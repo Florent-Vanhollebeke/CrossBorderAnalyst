@@ -21,6 +21,10 @@ BLUE_COLOR  = (59, 130, 246)   # blue-500
 
 CHF_TO_EUR  = 1.064
 
+# Loyer Lyon Part-Dieu - estimation marché 2026 (hors modèle ML)
+# Source : Bureauxlocaux 2024, JLL Lyon 3 2025, projection hausse modérée
+LYON_RENT_EUR_PER_M2_YEAR = 250.0
+
 # Noms de villes en français
 CITY_FR = {
     "Basel":    "Bâle",
@@ -326,11 +330,9 @@ class PDFGenerator:
                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(3)
 
-        # Loyer de référence (ville simulée)  -  fallback si city_rents absent
+        # Loyer Lyon : estimation marché 250 EUR/m²/an (projection 2026, hors modèle ML)
+        surface = rent.get("surface", 300)
         fallback_chf = rent.get("predicted_rent_chf", 0)
-        fallback_eur = rent.get("predicted_rent_eur", 0)
-        rent_chf_annual = fallback_chf * 12
-        rent_eur_annual = fallback_eur * 12
 
         label_w = 55
         col_w = (170 - label_w) // max(len(fiscal_results), 1)
@@ -346,21 +348,21 @@ class PDFGenerator:
         pdf.ln()
 
         def _city_rent_annual(r: dict) -> float:
-            """Loyer annuel pour une ville : city_rents si dispo, sinon fallback."""
-            city = r.get("city", "")
-            if r["currency"] == "CHF":
-                return city_rents.get(city, fallback_chf) * 12
-            else:
-                # Lyon (EUR) : pas de modele suisse - fallback converti
-                return rent_eur_annual
+            """Loyer annuel par ville. Lyon = marché 250 EUR/m2/an. CH = modèle ML."""
+            if r["currency"] == "EUR":
+                return surface * LYON_RENT_EUR_PER_M2_YEAR
+            return (city_rents.get(r.get("city", "")) or fallback_chf) * 12
 
-        # Loyer annuel row
+        # Loyer annuel row - flag (*) sur Lyon pour signaler estimation marché
         pdf.set_fill_color(*LIGHT_GRAY)
         pdf.set_text_color(*DARK_COLOR)
         pdf.set_font("Helvetica", "", 8)
         pdf.cell(label_w, row_h, "Loyer annuel", fill=True)
         for r in fiscal_results:
-            pdf.cell(col_w, row_h, _fmt(_city_rent_annual(r), r["currency"]), fill=True, align="R")
+            val = _fmt(_city_rent_annual(r), r["currency"])
+            if r["currency"] == "EUR":
+                val = val + " *"
+            pdf.cell(col_w, row_h, val, fill=True, align="R")
         pdf.ln()
 
         # Coût employeur row
@@ -370,7 +372,7 @@ class PDFGenerator:
             pdf.cell(col_w, row_h, _fmt(r["total_employer_cost"], r["currency"]), fill=True, align="R")
         pdf.ln()
 
-        # Total row
+        # Total charges row
         pdf.set_fill_color(240, 253, 244)
         pdf.set_font("Helvetica", "B", 8)
         pdf.set_text_color(*BRAND_COLOR)
@@ -384,7 +386,36 @@ class PDFGenerator:
         pdf.set_fill_color(16, 185, 129)
         pdf.set_text_color(255, 255, 255)
         pdf.cell(label_w, row_h, "Résultat net après loyer", fill=True)
+        net_values = {}
         for r in fiscal_results:
-            net_after_rent = r["net_result"] - _city_rent_annual(r)
-            pdf.cell(col_w, row_h, _fmt(net_after_rent, r["currency"]), fill=True, align="R")
+            net = r["net_result"] - _city_rent_annual(r)
+            net_values[r["city"]] = (net, r["currency"])
+            pdf.cell(col_w, row_h, _fmt(net, r["currency"]), fill=True, align="R")
         pdf.ln()
+
+        # Ligne équivalent EUR - permet comparaison directe inter-devises
+        pdf.set_fill_color(219, 234, 254)  # blue-100
+        pdf.set_text_color(37, 99, 235)    # blue-600
+        pdf.set_font("Helvetica", "I", 7)
+        pdf.cell(label_w, row_h, "  equiv. EUR (indicatif)", fill=True)
+        for r in fiscal_results:
+            net, currency = net_values[r["city"]]
+            if currency == "CHF":
+                equiv = net * CHF_TO_EUR
+                label = f"~{equiv:,.0f} EUR".replace(",", " ")
+            else:
+                label = _fmt(net, "EUR")
+            pdf.cell(col_w, row_h, label, fill=True, align="R")
+        pdf.ln()
+
+        # Note de bas de tableau
+        pdf.ln(2)
+        pdf.set_font("Helvetica", "I", 6)
+        pdf.set_text_color(*GRAY_COLOR)
+        pdf.multi_cell(
+            0, 4,
+            "* Lyon (2026) - Estimation marché : 250 EUR/m2/an, bureaux standard Part-Dieu. "
+            "Source : Bureauxlocaux 2024, JLL Lyon 3 2025 - projection 2026 hausse modérée. "
+            "Hors modèle ML (modèle disponible uniquement pour les villes suisses).",
+            align="L",
+        )
