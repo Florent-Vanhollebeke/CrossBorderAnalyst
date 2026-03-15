@@ -414,6 +414,37 @@ class PDFGenerator:
             pdf.cell(col_w, row_h, label, fill=True, align="R")
         pdf.ln()
 
+        # ---- Projection pluriannuelle ----
+        pdf.ln(2)
+        pdf.set_font("Helvetica", "B", 7)
+        pdf.set_text_color(*GRAY_COLOR)
+        pdf.cell(0, 5, "Projection pluriannuelle - Cout Total d'Implantation (loyer + charges employeur)",
+                 new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
+        for years in (3, 5):
+            pdf.set_fill_color(55, 65, 81)   # gray-700
+            pdf.set_text_color(255, 255, 255)
+            pdf.set_font("Helvetica", "B", 8)
+            pdf.cell(label_w, row_h, f"TCO {years} ans", fill=True)
+            for r in fiscal_results:
+                total_annual = r["total_employer_cost"] + _city_rent_annual(r)
+                pdf.cell(col_w, row_h, _fmt(total_annual * years, r["currency"]), fill=True, align="R")
+            pdf.ln()
+            # equiv EUR sub-row
+            pdf.set_fill_color(243, 244, 246)  # gray-100
+            pdf.set_text_color(*GRAY_COLOR)
+            pdf.set_font("Helvetica", "I", 7)
+            pdf.cell(label_w, 6, "  equiv. EUR", fill=True)
+            for r in fiscal_results:
+                total_annual = r["total_employer_cost"] + _city_rent_annual(r)
+                tco = total_annual * years
+                if r["currency"] == "CHF":
+                    equiv = tco * CHF_TO_EUR
+                    pdf.cell(col_w, 6, f"~{equiv:,.0f} EUR".replace(",", " "), fill=True, align="R")
+                else:
+                    pdf.cell(col_w, 6, _fmt(tco, "EUR"), fill=True, align="R")
+            pdf.ln()
+
         # Note de bas de tableau
         pdf.ln(2)
         pdf.set_font("Helvetica", "I", 6)
