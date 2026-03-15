@@ -1,5 +1,5 @@
 // ============================================
-// SwissRelocator — Gestion historique simulations
+// CrossBorder Analyst — Gestion historique simulations
 // Supabase si connecté, localStorage sinon
 // ============================================
 
@@ -13,7 +13,7 @@ export interface SimulationEntry {
   params: Record<string, unknown>;
 }
 
-const LS_KEY = 'swissrelocator_history';
+const LS_KEY = 'crossborderanalyst_history';
 
 // ============================================
 // SAUVEGARDE

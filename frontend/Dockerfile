@@ -1,5 +1,5 @@
 # ============================================
-# SwissRelocator — Frontend Dockerfile
+# CrossBorder Analyst — Frontend Dockerfile
 # Multi-stage : deps + builder + runner
 # ============================================
 

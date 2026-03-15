@@ -63,7 +63,7 @@ export function CombinedDownloadButton({ fiscalResults, rentResult, rentParams }
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'swissrelocator_analyse_complete.pdf';
+      link.download = 'crossborderanalyst_analyse_complete.pdf';
       document.body.appendChild(link);
       link.click();
       link.remove();

@@ -10,11 +10,11 @@ export function Footer() {
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <div className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-brand-600" />
-            <span className="font-semibold text-brand-900">SwissRelocator</span>
+            <span className="font-semibold text-brand-900">CrossBorder Analyst</span>
           </div>
           <p className="text-sm text-gray-500">{t('description')}</p>
           <p className="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} Florent Vanhollebeke. {t('legal')}
+            A proof-of-concept by Florent Vanhollebeke &mdash; &copy; {new Date().getFullYear()}. {t('legal')}
           </p>
         </div>
       </div>

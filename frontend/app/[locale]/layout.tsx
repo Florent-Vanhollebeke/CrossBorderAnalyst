@@ -15,17 +15,32 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+  const title = locale === 'fr'
+    ? 'CrossBorder Analyst — Analyse d\'implantation France-Suisse'
+    : locale === 'de'
+    ? 'CrossBorder Analyst — Frankreich-Schweiz Standortanalyse'
+    : 'CrossBorder Analyst — France-Switzerland Implantation Analysis';
+
+  const description = locale === 'fr'
+    ? 'Comparaison fiscale professionnelle, prédiction de loyer ML et conseil réglementaire pour les décisions d\'implantation cross-border France-Suisse.'
+    : locale === 'de'
+    ? 'Professioneller Steuervergleich, ML-Mietprognose und regulatorische Beratung für grenzüberschreitende Ansiedlungsentscheidungen Frankreich–Schweiz.'
+    : 'Professional cross-border fiscal comparison, ML rent prediction, and regulatory advisory for France-Switzerland implantation decisions.';
+
   return {
-    title: locale === 'fr'
-      ? 'SwissRelocator - Comparaison fiscale France-Suisse'
-      : locale === 'de'
-      ? 'SwissRelocator - Steuervergleich Frankreich-Schweiz'
-      : 'SwissRelocator - France-Switzerland Tax Comparison',
-    description: locale === 'fr'
-      ? 'Simulez votre implantation en Suisse : fiscalite, loyers, charges sociales.'
-      : locale === 'de'
-      ? 'Simulieren Sie Ihre Niederlassung in der Schweiz: Steuern, Mieten, Sozialabgaben.'
-      : 'Simulate your relocation to Switzerland: taxation, rents, social charges.',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName: 'CrossBorder Analyst',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   };
 }
 

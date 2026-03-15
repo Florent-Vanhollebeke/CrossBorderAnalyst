@@ -1,5 +1,5 @@
 # ============================================
-# SwissRelocator — Backend Dockerfile
+# CrossBorder Analyst — Backend Dockerfile
 # Multi-stage : builder + runtime slim
 # ============================================
 

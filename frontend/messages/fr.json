@@ -7,20 +7,20 @@
     "account": "Mon espace"
   },
   "hero": {
-    "title": "Optimisez votre implantation en Suisse",
-    "subtitle": "Comparez la fiscalité, estimez vos loyers commerciaux et simulez vos coûts avec notre plateforme intelligente.",
-    "cta": "Lancer la simulation",
+    "title": "Analysez un scénario d'implantation cross-border France–Suisse",
+    "subtitle": "Comparaison fiscale, prédiction de loyer et conseil réglementaire — un outil d'aide à la décision pour les professionnels.",
+    "cta": "Lancer l'analyse",
     "secondary_cta": "Voir les villes"
   },
   "value_props": {
-    "title": "Pourquoi SwissRelocator ?",
+    "title": "Pourquoi CrossBorder Analyst ?",
     "fiscal": {
       "title": "Comparaison fiscale",
       "description": "IS, charges sociales, coût employeur : comparez France et Suisse en un clic."
     },
     "rent": {
       "title": "Prédiction de loyers",
-      "description": "Modèle ML entraîné sur 2000+ annonces ImmoScout24 pour estimer vos loyers commerciaux."
+      "description": "Modèle ML entraîné sur 1 200+ annonces ImmoScout24 pour estimer vos loyers commerciaux."
     },
     "privacy": {
       "title": "Privacy by Design",
@@ -41,16 +41,16 @@
     "combined_ready": "Analyse complète disponible",
     "combined_ready_sub": "Téléchargez le rapport fiscal + loyer en un seul PDF.",
     "fiscal": {
-      "revenue": "Chiffre d'affaires annuel (EUR)",
+      "revenue": "Chiffre d'affaires estimé (EUR)",
       "salary_director": "Salaire dirigeant annuel brut (EUR)",
       "num_employees": "Nombre d'employés",
       "avg_salary": "Salaire moyen employés (EUR)",
-      "city": "Ville",
+      "city": "Ville cible d'implantation",
       "submit": "Comparer",
       "loading": "Calcul en cours…"
     },
     "rent": {
-      "city": "Ville",
+      "city": "Ville cible d'implantation",
       "surface": "Surface (m²)",
       "pieces": "Nombre de pièces",
       "etage": "Étage",
@@ -64,7 +64,7 @@
     }
   },
   "results": {
-    "title": "Résultats",
+    "title": "Résultat de l'analyse",
     "fiscal": {
       "title": "Comparaison fiscale",
       "corporate_tax": "Impôt sur les sociétés",
@@ -75,7 +75,7 @@
       "profit_before_tax": "Bénéfice avant IS",
       "rate": "Taux",
       "amount": "Montant",
-      "savings": "Économie estimée vs Lyon",
+      "savings": "Différentiel fiscal estimé vs Lyon",
       "extra_cost": "Surcoût estimé vs Lyon"
     },
     "rent": {
@@ -89,7 +89,7 @@
       "training_data": "Données",
       "last_updated": "Mise à jour"
     },
-    "back": "Nouvelle simulation"
+    "back": "Nouvelle analyse"
   },
   "account": {
     "title": "Mon espace",
@@ -100,14 +100,14 @@
     },
     "stats": {
       "title": "Statistiques",
-      "total_simulations": "Simulations effectuées",
+      "total_simulations": "Analyses effectuées",
       "last_activity": "Dernière activité",
       "never": "Aucune"
     },
     "history": {
       "title": "Historique",
-      "empty": "Aucune simulation pour l'instant.",
-      "empty_cta": "Lancer ma première simulation",
+      "empty": "Aucune analyse pour l'instant.",
+      "empty_cta": "Lancer ma première analyse",
       "type_fiscal": "Fiscalité",
       "type_rent": "Loyer"
     },
@@ -133,7 +133,7 @@
     "suggested_q4": "Comment fonctionne l'impôt sur les bénéfices en Suisse ?"
   },
   "footer": {
-    "description": "Plateforme de comparaison fiscale et immobilière France-Suisse.",
+    "description": "Outil d'analyse d'implantation cross-border France–Suisse pour les professionnels.",
     "legal": "Tous droits réservés."
   }
 }

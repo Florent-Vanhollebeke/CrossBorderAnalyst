@@ -33,7 +33,7 @@ export function DownloadPDFButton({ results }: DownloadPDFButtonProps) {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'swissrelocator_rapport_fiscal.pdf';
+      link.download = 'crossborderanalyst_rapport_fiscal.pdf';
       document.body.appendChild(link);
       link.click();
       link.remove();

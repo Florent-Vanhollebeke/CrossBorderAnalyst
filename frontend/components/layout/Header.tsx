@@ -18,7 +18,7 @@ export function Header() {
       <div className="container-app flex h-16 items-center justify-between">
         <Link href={`/${locale}`} className="flex items-center gap-2">
           <Building2 className="h-7 w-7 text-brand-600" />
-          <span className="text-lg font-bold text-brand-900">SwissRelocator</span>
+          <span className="text-lg font-bold text-brand-900">CrossBorder Analyst</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

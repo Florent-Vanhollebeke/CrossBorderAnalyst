@@ -1,5 +1,5 @@
 // ============================================
-// SwissRelocator - API Client
+// CrossBorder Analyst - API Client
 // frontend/lib/api.ts
 // ============================================
 

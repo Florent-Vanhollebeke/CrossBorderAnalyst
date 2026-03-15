@@ -7,20 +7,20 @@
     "account": "Mein Konto"
   },
   "hero": {
-    "title": "Optimieren Sie Ihre Ansiedlung in der Schweiz",
-    "subtitle": "Vergleichen Sie die Steuerbelastung, schätzen Sie Ihre Gewerbemieten und simulieren Sie Ihre Kosten mit unserer intelligenten Plattform.",
-    "cta": "Simulation starten",
+    "title": "Analysieren Sie ein grenzüberschreitendes Standortszenario Frankreich–Schweiz",
+    "subtitle": "Steuervergleich, Mietprognose und regulatorische Beratung — ein Entscheidungstool für Fachleute.",
+    "cta": "Analyse starten",
     "secondary_cta": "Städte anzeigen"
   },
   "value_props": {
-    "title": "Warum SwissRelocator?",
+    "title": "Warum CrossBorder Analyst?",
     "fiscal": {
       "title": "Steuervergleich",
       "description": "Körperschaftssteuer, Sozialabgaben, Arbeitgeberkosten: Frankreich und Schweiz auf einen Blick vergleichen."
     },
     "rent": {
       "title": "Mietpreis­vorhersage",
-      "description": "ML-Modell trainiert auf 2000+ ImmoScout24-Inseraten zur Schätzung Ihrer Gewerbemieten."
+      "description": "ML-Modell trainiert auf 1.200+ ImmoScout24-Inseraten zur Schätzung Ihrer Gewerbemieten."
     },
     "privacy": {
       "title": "Privacy by Design",
@@ -41,16 +41,16 @@
     "combined_ready": "Vollständige Analyse verfügbar",
     "combined_ready_sub": "Laden Sie den Steuer- und Mietbericht als einzelnes PDF herunter.",
     "fiscal": {
-      "revenue": "Jahresumsatz (EUR)",
+      "revenue": "Geschätzter Jahresumsatz (EUR)",
       "salary_director": "Bruttogehalt Geschäftsführer jährlich (EUR)",
       "num_employees": "Anzahl Mitarbeitende",
       "avg_salary": "Durchschnittsgehalt Mitarbeitende (EUR)",
-      "city": "Stadt",
+      "city": "Zielstadt für die Ansiedlung",
       "submit": "Vergleichen",
       "loading": "Berechnung läuft…"
     },
     "rent": {
-      "city": "Stadt",
+      "city": "Zielstadt für die Ansiedlung",
       "surface": "Fläche (m²)",
       "pieces": "Anzahl Zimmer",
       "etage": "Stockwerk",
@@ -64,7 +64,7 @@
     }
   },
   "results": {
-    "title": "Ergebnisse",
+    "title": "Analyseergebnisse",
     "fiscal": {
       "title": "Steuervergleich",
       "corporate_tax": "Körperschaftssteuer",
@@ -75,7 +75,7 @@
       "profit_before_tax": "Gewinn vor Steuern",
       "rate": "Satz",
       "amount": "Betrag",
-      "savings": "Geschätzte Ersparnis vs. Lyon",
+      "savings": "Geschätztes Steuerdifferenzial vs. Lyon",
       "extra_cost": "Geschätzte Mehrkosten vs. Lyon"
     },
     "rent": {
@@ -89,7 +89,7 @@
       "training_data": "Datenquelle",
       "last_updated": "Letzte Aktualisierung"
     },
-    "back": "Neue Simulation"
+    "back": "Neue Analyse"
   },
   "account": {
     "title": "Mein Konto",
@@ -100,14 +100,14 @@
     },
     "stats": {
       "title": "Statistiken",
-      "total_simulations": "Durchgeführte Simulationen",
+      "total_simulations": "Durchgeführte Analysen",
       "last_activity": "Letzte Aktivität",
       "never": "Keine"
     },
     "history": {
       "title": "Verlauf",
-      "empty": "Noch keine Simulationen.",
-      "empty_cta": "Erste Simulation starten",
+      "empty": "Noch keine Analysen.",
+      "empty_cta": "Erste Analyse starten",
       "type_fiscal": "Steuer",
       "type_rent": "Miete"
     },
@@ -133,7 +133,7 @@
     "suggested_q4": "Wie funktioniert die Gewinnsteuer in der Schweiz?"
   },
   "footer": {
-    "description": "Plattform für Steuer- und Immobilienvergleiche Frankreich–Schweiz.",
+    "description": "Grenzüberschreitendes Analysetool für Ansiedlungsentscheidungen Frankreich–Schweiz.",
     "legal": "Alle Rechte vorbehalten."
   }
 }

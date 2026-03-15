@@ -1,5 +1,5 @@
 # ============================================
-# SwissRelocator — Docker Compose
+# CrossBorder Analyst — Docker Compose
 # Usage dev local : docker compose up --build
 # ============================================
 
@@ -8,7 +8,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: swissrelocator-backend
+    container_name: crossborderanalyst-backend
     ports:
       - "8000:8000"
     environment:
@@ -36,7 +36,7 @@ services:
         NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
         NEXT_PUBLIC_API_URL: http://backend:8000
-    container_name: swissrelocator-frontend
+    container_name: crossborderanalyst-frontend
     ports:
       - "3000:3000"
     environment:

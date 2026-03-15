@@ -33,7 +33,7 @@ export function RentResults({ result, onBack }: RentResultsProps) {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'swissrelocator_rapport_loyer.pdf';
+      link.download = 'crossborderanalyst_rapport_loyer.pdf';
       document.body.appendChild(link);
       link.click();
       link.remove();

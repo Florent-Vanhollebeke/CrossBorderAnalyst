@@ -13,7 +13,7 @@ export function StatsCard() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('swissrelocator_history');
+      const raw = localStorage.getItem('crossborderanalyst_history');
       const history: SimulationEntry[] = raw ? JSON.parse(raw) : [];
       setCount(history.length);
       if (history.length > 0) {

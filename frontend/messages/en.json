@@ -7,20 +7,20 @@
     "account": "My account"
   },
   "hero": {
-    "title": "Optimize your relocation to Switzerland",
-    "subtitle": "Compare taxation, estimate commercial rents and simulate your costs with our intelligent platform.",
-    "cta": "Start simulation",
+    "title": "Analyze a cross-border implantation scenario between France and Switzerland",
+    "subtitle": "Fiscal comparison, rent prediction, and regulatory advisory — a decision-support tool for professionals.",
+    "cta": "Start analysis",
     "secondary_cta": "View cities"
   },
   "value_props": {
-    "title": "Why SwissRelocator?",
+    "title": "Why CrossBorder Analyst?",
     "fiscal": {
       "title": "Tax comparison",
       "description": "Corporate tax, social charges, employer cost: compare France and Switzerland in one click."
     },
     "rent": {
       "title": "Rent prediction",
-      "description": "ML model trained on 2000+ ImmoScout24 listings to estimate your commercial rents."
+      "description": "ML model trained on 1,200+ ImmoScout24 listings to estimate your commercial rents."
     },
     "privacy": {
       "title": "Privacy by Design",
@@ -41,16 +41,16 @@
     "combined_ready": "Full analysis ready",
     "combined_ready_sub": "Download the fiscal + rent report as a single PDF.",
     "fiscal": {
-      "revenue": "Annual revenue (EUR)",
+      "revenue": "Estimated annual revenue (EUR)",
       "salary_director": "Director annual gross salary (EUR)",
       "num_employees": "Number of employees",
       "avg_salary": "Average employee salary (EUR)",
-      "city": "City",
+      "city": "Target implantation city",
       "submit": "Compare",
       "loading": "Calculating..."
     },
     "rent": {
-      "city": "City",
+      "city": "Target implantation city",
       "surface": "Surface (sqm)",
       "pieces": "Number of rooms",
       "etage": "Floor",
@@ -64,7 +64,7 @@
     }
   },
   "results": {
-    "title": "Results",
+    "title": "Analysis results",
     "fiscal": {
       "title": "Tax comparison",
       "corporate_tax": "Corporate income tax",
@@ -75,7 +75,7 @@
       "profit_before_tax": "Profit before tax",
       "rate": "Rate",
       "amount": "Amount",
-      "savings": "Estimated savings vs Lyon",
+      "savings": "Estimated fiscal differential vs Lyon",
       "extra_cost": "Estimated extra cost vs Lyon"
     },
     "rent": {
@@ -89,7 +89,7 @@
       "training_data": "Data source",
       "last_updated": "Last updated"
     },
-    "back": "New simulation"
+    "back": "New analysis"
   },
   "account": {
     "title": "My account",
@@ -100,14 +100,14 @@
     },
     "stats": {
       "title": "Statistics",
-      "total_simulations": "Simulations run",
+      "total_simulations": "Analyses run",
       "last_activity": "Last activity",
       "never": "None"
     },
     "history": {
       "title": "History",
-      "empty": "No simulations yet.",
-      "empty_cta": "Run my first simulation",
+      "empty": "No analyses yet.",
+      "empty_cta": "Run my first analysis",
       "type_fiscal": "Tax",
       "type_rent": "Rent"
     },
@@ -133,7 +133,7 @@
     "suggested_q4": "How does corporate income tax work in Switzerland?"
   },
   "footer": {
-    "description": "France-Switzerland tax and real estate comparison platform.",
+    "description": "Cross-border implantation analysis tool for France–Switzerland decisions.",
     "legal": "All rights reserved."
   }
 }
