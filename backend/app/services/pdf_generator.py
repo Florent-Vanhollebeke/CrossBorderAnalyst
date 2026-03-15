@@ -2,7 +2,7 @@
 # CrossBorder Analyst - Générateur de rapports PDF
 # backend/app/services/pdf_generator.py
 # Utilise fpdf2 (pure Python, pas de dépendances système)
-# Helvetica core font — supporte Latin-1 / Windows-1252 (accents FR/DE/IT)
+# Helvetica core font  -  supporte Latin-1 / Windows-1252 (accents FR/DE/IT)
 # ============================================
 
 from datetime import datetime
@@ -39,7 +39,7 @@ def _fmt(amount: float, currency: str) -> str:
     """Formate un montant avec séparateur de milliers."""
     if currency == "CHF":
         return f"{amount:,.0f} CHF".replace(",", "'")
-    return f"{amount:,.0f} EUR".replace(",", "\u202f")
+    return f"{amount:,.0f} EUR".replace(",", " ")
 
 
 def _pct(rate: float) -> str:
@@ -258,7 +258,7 @@ class PDFGenerator:
         city = _city_fr(rent.get("city", ""))
         surface = rent.get("surface", "")
         prop_type = rent.get("property_type", "bureau")
-        pdf.cell(0, 5, f"Loyer estimé — {city} — {surface} m² ({prop_type})")
+        pdf.cell(0, 5, f"Loyer estimé  -  {city}  -  {surface} m2 ({prop_type})")
 
         pdf.set_xy(x + 6, y + 11)
         pdf.set_font("Helvetica", "B", 16)
@@ -270,7 +270,7 @@ class PDFGenerator:
         pdf.set_xy(x + 90, y + 14)
         pdf.set_font("Helvetica", "", 10)
         pdf.set_text_color(*GRAY_COLOR)
-        pdf.cell(0, 6, f"~ {eur:,.0f} EUR/mois".replace(",", "\u202f"))
+        pdf.cell(0, 6, f"~ {eur:,.0f} EUR/mois".replace(",", " "))
 
         pdf.set_y(y + box_h + 6)
 
@@ -280,7 +280,7 @@ class PDFGenerator:
         col2 = 85
 
         details = [
-            ("Prix au m²", f"{rent.get('price_per_m2_chf', 0):.1f} CHF/m²"),
+            ("Prix au m2", f"{rent.get('price_per_m2_chf', 0):.1f} CHF/m2"),
             ("Loyer annuel", f"{chf * 12:,.0f} CHF/an".replace(",", "'")),
         ]
         conf = rent.get("confidence_range", {})
@@ -307,7 +307,7 @@ class PDFGenerator:
             r2 = model.get("r2_score", 0)
             mtype = model.get("model_type", "")
             data = model.get("training_data", "")
-            pdf.cell(0, 5, f"Modèle : {mtype} | R²={r2:.3f} | Données : {data}",
+            pdf.cell(0, 5, f"Modèle : {mtype} | R2={r2:.3f} | Données : {data}",
                      new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     # ------------------------------------------
@@ -326,7 +326,7 @@ class PDFGenerator:
                  new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(3)
 
-        # Loyer de référence (ville simulée) — fallback si city_rents absent
+        # Loyer de référence (ville simulée)  -  fallback si city_rents absent
         fallback_chf = rent.get("predicted_rent_chf", 0)
         fallback_eur = rent.get("predicted_rent_eur", 0)
         rent_chf_annual = fallback_chf * 12
@@ -351,7 +351,7 @@ class PDFGenerator:
             if r["currency"] == "CHF":
                 return city_rents.get(city, fallback_chf) * 12
             else:
-                # Lyon (EUR) : pas de modèle suisse → fallback converti
+                # Lyon (EUR) : pas de modele suisse - fallback converti
                 return rent_eur_annual
 
         # Loyer annuel row
