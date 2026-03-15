@@ -33,8 +33,11 @@ export function HeroSection() {
             France vs Suisse
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            {t('title')}
+          <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+            <span className="block leading-tight">{t('title_main')}</span>
+            <span className="block bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
+              {t('title_accent')}
+            </span>
           </h1>
 
           <p className="mt-6 text-lg leading-relaxed text-brand-200/80">
