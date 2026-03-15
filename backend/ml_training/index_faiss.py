@@ -105,6 +105,18 @@ DOCUMENTS_META = {
         "language": "fr",
         "description": "TVA - Comparatif France/Suisse",
     },
+    "fiscalite_france_synthese.txt": {
+        "canton": "FR",
+        "doc_type": "synthese",
+        "language": "fr",
+        "description": "Synthese fiscalite France - IS, CFE, IFI, plus-values, droits mutation, charges sociales",
+    },
+    "actualisation_fiscale_2026.txt": {
+        "canton": "CH",
+        "doc_type": "actualisation",
+        "language": "fr",
+        "description": "Actualisation fiscale 2026 - PASS, SMIC, CVAE, IS, LPP, AVS France et Suisse",
+    },
 }
 
 # Import BOFIP metadata si disponible
